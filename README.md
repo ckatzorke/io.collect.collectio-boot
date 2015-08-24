@@ -2,8 +2,6 @@
 
 Game collector application
 
-	--npm install--
-	--grunt--
 	mvn spring-boot:run -D"giantbomb.apikey=apikey"
 
 # Features (not all planned for beginning)
