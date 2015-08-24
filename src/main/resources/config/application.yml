@@ -1,7 +1,7 @@
 server:
   port: 8080
 
--- start with -Dgiantbomb.apikey=yourkey
+# start with -Dgiantbomb.apikey=yourkey
 giantbomb:
   apikey: 
 

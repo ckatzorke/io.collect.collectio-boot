@@ -27,3 +27,6 @@ bower_components/
 .tmp
 .sass-cache
 /dist/
+#maven-grunt
+./node
+./target-grunt
