@@ -28,5 +28,5 @@ bower_components/
 .sass-cache
 /dist/
 #maven-grunt
-./node
-./target-grunt
+node/
+target-grunt/
