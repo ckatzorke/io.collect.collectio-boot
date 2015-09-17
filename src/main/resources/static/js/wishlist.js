@@ -1,23 +1,29 @@
 "use strict";
 
+var store = new WishlistStore();
+
 var Wishlist = React.createClass({
   displayName: "Wishlist",
 
   getInitialState: function getInitialState() {
     return {
-      wishlistEntries: [{
-        title: "Bloodsucking Bastards",
-        info: "Imagine if Office Space got invaded by From Dusk Till Dawn",
-        links: ["http://www.imdb.com/title/tt3487994/", "http://www.amazon.com/", "https://www.themoviedb.org/movie/317981-bloodsucking-bastards?language=en"],
-        added: new Date(),
-        prio: true
-      }]
+      wishlistEntries: []
     };
+  },
+  componentDidMount: function componentDidMount() {
+    var _this = this;
+    store.getAll().then(function (data) {
+      if (data !== undefined) {
+        _this.setState({ wishlistEntries: data });
+      }
+    });
   },
   handleAdd: function handleAdd(entry) {
     console.log(entry);
-    var newEntries = this.state.wishlistEntries.concat([entry]);
-    this.setState({ wishlistEntries: newEntries });
+    var _this = this;
+    store.add(entry).then(function (data) {
+      _this.setState({ wishlistEntries: newEntries });
+    });
   },
   render: function render() {
     return React.createElement(
@@ -42,6 +48,8 @@ var WishlistForm = React.createClass({
 
   handleSubmit: function handleSubmit(e) {
     e.preventDefault();
+    var typeElement = React.findDOMNode(this.refs.type);
+    var type = typeElement.options[typeElement.selectedIndex].value;
     var title = React.findDOMNode(this.refs.title).value.trim();
     var info = React.findDOMNode(this.refs.info).value.trim();
     var link = React.findDOMNode(this.refs.link).value.trim();
@@ -50,7 +58,7 @@ var WishlistForm = React.createClass({
       links = link.split(" ");
     }
     var prio = React.findDOMNode(this.refs.prio).checked;
-    this.props.onWishlistEntrySubmit({ title: title, info: info, links: links, prio: prio, added: new Date() });
+    this.props.onWishlistEntrySubmit({ type: type, title: title, info: info, links: links, prio: prio, added: new Date() });
     React.findDOMNode(this.refs.title).value = '';
     React.findDOMNode(this.refs.info).value = '';
     React.findDOMNode(this.refs.link).value = '';
@@ -68,30 +76,38 @@ var WishlistForm = React.createClass({
           "div",
           { className: "form-group" },
           React.createElement(
-            "label",
-            { htmlFor: "inputTitle" },
-            "Title"
-          ),
+            "select",
+            { className: "form-control", id: "type", ref: "type" },
+            React.createElement(
+              "option",
+              null,
+              "Movie"
+            ),
+            React.createElement(
+              "option",
+              null,
+              "Game"
+            ),
+            React.createElement(
+              "option",
+              null,
+              "Comic"
+            )
+          )
+        ),
+        React.createElement(
+          "div",
+          { className: "form-group" },
           React.createElement("input", { type: "text", className: "form-control", id: "inputTitle", ref: "title", placeholder: "Title" })
         ),
         React.createElement(
           "div",
           { className: "form-group" },
-          React.createElement(
-            "label",
-            { htmlFor: "inputInfo" },
-            "Info"
-          ),
           React.createElement("textarea", { className: "form-control", id: "inputInfo", ref: "info", placeholder: "Info" })
         ),
         React.createElement(
           "div",
           { className: "form-group" },
-          React.createElement(
-            "label",
-            { htmlFor: "inputLink0" },
-            "Link"
-          ),
           React.createElement("input", { type: "text", className: "form-control", ref: "link", id: "inputLink0", placeholder: "Link" })
         ),
         React.createElement(
@@ -120,11 +136,18 @@ var WishlistForm = React.createClass({
 var WishlistEntries = React.createClass({
   displayName: "WishlistEntries",
 
+  remove: function remove(url) {
+    console.log("DELETE".url);
+  },
+  handleRemove: function handleRemove(ele, index) {
+    console.log(ele, index);
+  },
   render: function render() {
     var entryNodes = "No entries yet, use form to add some...";
     if (this.props.entries && this.props.entries.length > 0) {
       entryNodes = this.props.entries.map(function (entry) {
-        var dateAdded = entry.added.toISOString().slice(0, 10);
+        var dateAdded = new Date(entry.added).toISOString().slice(0, 10);
+        var boundClickRemove = this.handleRemove.bind(this, i);
         return React.createElement(
           "div",
           null,
@@ -140,7 +163,8 @@ var WishlistEntries = React.createClass({
               dateAdded,
               ")"
             ),
-            entry.prio ? React.createElement("span", { className: "glyphicon glyphicon-heart pull-right" }) : ''
+            entry.prio ? React.createElement("span", { className: "glyphicon glyphicon-heart pull-right" }) : '',
+            React.createElement("span", { onClick: boundClickRemove, className: "glyphicon glyphicon-remove pull-right" })
           )
         );
       });

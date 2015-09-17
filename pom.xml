@@ -11,19 +11,17 @@
 	<name>collectio-boot</name>
 	<description>Spring Boot based collectio server</description>
 
-	<parent>
-		<groupId>org.springframework.cloud</groupId>
-		<artifactId>spring-cloud-starter-parent</artifactId>
-		<version>1.0.1.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
+	    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.2.5.RELEASE</version>
+    </parent>
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>io.collect.CollectioApplication</start-class>
 		<java.version>1.8</java.version>
-		<orientdb.version>2.0.11</orientdb.version>
-		<blueprints.version>2.6.0</blueprints.version>
 	</properties>
 
 	<dependencies>
@@ -54,6 +52,10 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -88,7 +90,7 @@
 					<gruntOptions>
 						<gruntOption>--verbose</gruntOption>
 					</gruntOptions>
-<jsSourceDirectory>./</jsSourceDirectory>
+					<jsSourceDirectory>./</jsSourceDirectory>
 				</configuration>
 				<executions>
 					<execution>

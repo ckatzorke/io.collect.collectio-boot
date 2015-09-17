@@ -1,25 +1,25 @@
+var store = new WishlistStore();
+
 var Wishlist = React.createClass({
   getInitialState: function(){
     return {
-      wishlistEntries: [
-        {
-          title: "Bloodsucking Bastards",
-          info: "Imagine if Office Space got invaded by From Dusk Till Dawn",
-          links: [
-              "http://www.imdb.com/title/tt3487994/",
-              "http://www.amazon.com/",
-              "https://www.themoviedb.org/movie/317981-bloodsucking-bastards?language=en"
-          ],
-          added: new Date(),
-          prio: true
-        }
-      ]
+      wishlistEntries: []
     };
+  },
+  componentDidMount: function(){
+    var _this = this;
+    store.getAll().then(data=>{
+      if(data !== undefined){
+        _this.setState({wishlistEntries: data});
+      }
+    });
   },
   handleAdd: function(entry) {
     console.log(entry);
-    var newEntries = this.state.wishlistEntries.concat([entry]);
-    this.setState({wishlistEntries: newEntries});
+    var _this = this;
+    store.add(entry).then(data=>{
+      _this.setState({wishlistEntries: newEntries});
+    });
   },
   render: function() {
     return (
@@ -38,6 +38,8 @@ var Wishlist = React.createClass({
 var WishlistForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
+    var typeElement = React.findDOMNode(this.refs.type);
+    var type = typeElement.options[typeElement.selectedIndex].value;
     var title = React.findDOMNode(this.refs.title).value.trim();
     var info = React.findDOMNode(this.refs.info).value.trim();
     var link = React.findDOMNode(this.refs.link).value.trim();
@@ -46,7 +48,7 @@ var WishlistForm = React.createClass({
       links = link.split(" ");
     }
     var prio = React.findDOMNode(this.refs.prio).checked;
-    this.props.onWishlistEntrySubmit({title: title, info: info, links: links, prio: prio, added: new Date()});
+    this.props.onWishlistEntrySubmit({type: type, title: title, info: info, links: links, prio: prio, added: new Date()});
     React.findDOMNode(this.refs.title).value = '';
     React.findDOMNode(this.refs.info).value = '';
     React.findDOMNode(this.refs.link).value = '';
@@ -57,16 +59,20 @@ var WishlistForm = React.createClass({
     return (
       <div className="wishlistform">
         <form onSubmit={this.handleSubmit}>
+        <div className="form-group">
+          <select className="form-control" id="type" ref="type">
+            <option>Movie</option>
+            <option>Game</option>
+            <option>Comic</option>
+          </select>
+        </div>
           <div className="form-group">
-            <label htmlFor="inputTitle">Title</label>
             <input type="text" className="form-control" id="inputTitle" ref="title" placeholder="Title" />
           </div>
           <div className="form-group">
-            <label htmlFor="inputInfo">Info</label>
-            <textarea className="form-control" id="inputInfo" ref="info" placeholder="Info"></textarea>
+            <textarea className="form-control" id="inputInfo" ref="info" placeholder="Info" />
           </div>
           <div className="form-group">
-            <label htmlFor="inputLink0">Link</label>
             <input type="text" className="form-control" ref="link" id="inputLink0" placeholder="Link" />
           </div>
           <div className="checkbox">
@@ -82,14 +88,21 @@ var WishlistForm = React.createClass({
 });
 
 var WishlistEntries = React.createClass({
+  remove: function(url){
+    console.log("DELETE". url)
+  },
+  handleRemove: function(ele, index) {
+    console.log(ele, index);
+  },
   render: function(){
     var entryNodes = "No entries yet, use form to add some...";
     if(this.props.entries && this.props.entries.length > 0){
       entryNodes = this.props.entries.map(function (entry) {
-        var dateAdded = entry.added.toISOString().slice(0, 10);
+        var dateAdded = new Date(entry.added).toISOString().slice(0, 10);
+        var boundClickRemove = this.handleRemove.bind(this, i);
         return (
           <div>
-            <a href="#" className="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">{entry.title} <small>(added {dateAdded})</small>{entry.prio?<span className="glyphicon glyphicon-heart pull-right"></span>:''}</a>
+            <a href="#" className="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">{entry.title} <small>(added {dateAdded})</small>{entry.prio?<span className="glyphicon glyphicon-heart pull-right"></span>:''}<span onClick={boundClickRemove} className="glyphicon glyphicon-remove pull-right"></span></a>
           </div>
         );
       });

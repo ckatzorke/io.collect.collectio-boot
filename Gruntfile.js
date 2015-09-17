@@ -41,11 +41,16 @@ module.exports = function(grunt) {
           'src/main/resources/static/js/giantbombsearch.js': 'src/main/jsx/giantbombsearch.js',
           'src/main/resources/static/js/wishlist.js': 'src/main/jsx/wishlist.js'
         }
+      },
+      js: {
+        files: {
+          'src/main/resources/static/js/wishliststore.js': 'src/main/js/wishliststore.js'
+        }
       }
     },
     watch: {
       jsx: {
-        files: ['src/main/jsx/*.js'],
+        files: ['src/main/jsx/*.js', 'src/main/js/*.js'],
         tasks: ['babel'],
         options: {
           spawn: false,
