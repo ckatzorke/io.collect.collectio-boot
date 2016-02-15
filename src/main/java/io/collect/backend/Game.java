@@ -20,7 +20,7 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 
 /**
- * Model class for collection
+ * Model class for collected Games
  * 
  * @author Christian Katzorke ckatzorke@gmail.com
  *
@@ -30,11 +30,11 @@ public class Game {
 	@Id
 	String id;
 	
+	int collectionnr;
 	String name;
-	String platform;
+	String[] platform;
 	boolean played;
 	boolean finished;
-	boolean favorite;
 	boolean digital;
 	String[] tags;
 	int rating;

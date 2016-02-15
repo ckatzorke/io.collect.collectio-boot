@@ -42,10 +42,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest/giantbomb")
 public class GiantBombRestHandler {
 
-	/**
-	 * 
-	 */
 	private static final String COLLECTION_GIANTBOMBGAME = "GiantBombGame";
+	private static final String COLLECTION_GAME = "Game";
+	
 	private GiantBombTemplate gbTemplate;
 	private MongoTemplate mongoTemplate;
 
