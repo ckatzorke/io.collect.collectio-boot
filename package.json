@@ -9,6 +9,8 @@
   "author": "Christian Katzorke <ckatzorke@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1"
   },
   "paths": {
     "dist": "src/main/resources/static"
