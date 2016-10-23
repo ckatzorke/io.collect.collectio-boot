@@ -1,16 +1,6 @@
 server:
   port: 8080
   
-spring:
-  data:
-    mongodb.host: 192.168.99.100
-    mongodb.port: 32769
-    mongodb.uri: mongodb://192.168.99.100:32769/collectio
-    mongo.repositories.enabled: true
-    rest:
-      baseUri: /rest/api
-     
-
 # start with -Dgiantbomb.apikey=yourkey
 giantbomb:
   apikey: 

@@ -13,40 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.collect.backend;
+package io.collect.giantbomb.resources;
 
-import java.util.Date;
-
-import org.springframework.data.annotation.Id;
+import java.util.List;
 
 /**
- * Model class for collected Games
- * 
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-public class Game {
+public class GiantBombMultiResourceResponse<T extends GiantBombResource> extends GiantBombResponse {
+	/**
+	 * Zero or more items that match the filters specified
+	 */
+	public List<T> results;
 	
-	@Id
-	String id;
-	
-	int collectionnr;
-	String name;
-	String[] platform;
-	boolean played;
-	boolean finished;
-	boolean digital;
-	String[] tags;
-	int rating;
-
-	Date bought;
-	String placeBought;
-	String ean;
-	String region;
-	
-	Date added;
-	Date updated;
-
-	int gbGameId;
-
 }

@@ -13,23 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.collect.backend;
-
-import java.util.Date;
-
-import org.springframework.data.annotation.Id;
+package io.collect.giantbomb.resources;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-public class WishlistEntry {
-	@Id
-	public String id;
-	public String type;
-	public String title;
-	public String info;
-	public String[] links;
-	public Date added;
-	public boolean prio;
+public class GiantBombSingleResourceResponse<T extends GiantBombResource>
+		extends GiantBombResponse {
+	/**
+	 * Single item that match the resource identifier
+	 */
+	public T results;
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "GiantBombSingleResourceResponse [results=" + results
+				+ ", status_code=" + status_code + ", error=" + error
+				+ ", number_of_total_results=" + number_of_total_results
+				+ ", number_of_page_results=" + number_of_page_results
+				+ ", limit=" + limit + ", offset=" + offset + ", version="
+				+ version + "]";
+	}
+	
+	
+
 }

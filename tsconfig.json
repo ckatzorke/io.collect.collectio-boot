@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "outDir": "target/js/"
+  },
+  "files": [
+    "src/main/frontend/app/vendor.ts",
+    "src/main/frontend/app/main.ts"
+  ]
+}

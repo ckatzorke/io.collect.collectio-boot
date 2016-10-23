@@ -1,5 +1,5 @@
 /*
- * Copyright (C) Christian Katzorke <ckatzorke@gmail.com>
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.collect.backend;
+package io.collect.giantbomb.config;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-@RepositoryRestResource(path = "wishlist")
-public interface WishlistEntryRepository extends
-		MongoRepository<WishlistEntry, String> {
+@Component
+@ConfigurationProperties("giantbomb")
+public class GiantBombProperties {
+	private String apikey;
 
+	/**
+	 * @param apikey
+	 *            the apikey to set
+	 */
+	public void setApikey(String apikey) {
+		this.apikey = apikey;
+	}
+
+	/**
+	 * @return the apikey
+	 */
+	public String getApikey() {
+		return apikey;
+	}
 }

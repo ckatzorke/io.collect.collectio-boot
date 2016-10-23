@@ -1,18 +1,52 @@
 {
-  "name": "collectio-boot",
-  "version": "0.0.1",
-  "description": "Game collector application",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Christian Katzorke <ckatzorke@gmail.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "webpack": "^1.12.13",
-    "webpack-dev-server": "^1.14.1"
-  },
-  "paths": {
-    "dist": "src/main/resources/static"
-  }
+    "name": "collectio-boot",
+    "version": "0.0.1",
+    "description": "Game collector application",
+    "main": "index.js",
+    "scripts": {
+        "prebuild": "npm run clean",
+        "build": "webpack --profile --colors --display-error-details --display-cached",
+        "clean": "rimraf target/generated-frontend",
+        "start": "webpack-dev-server --inline --colors --port 3000",
+        "test": "karma start",
+        "watch": "webpack --watch --profile --colors --display-error-details --display-cached"
+    },
+    "author": "Christian Katzorke <ckatzorke@gmail.com>",
+    "license": "MIT",
+    "repository": "https://github.com/ckatzorke/io.collect.collectio-boot.git",
+    "dependencies": {
+        "angular2": "2.0.0-beta.2",
+        "es6-promise": "^3.0.2",
+        "es6-shim": "^0.33.3",
+        "es7-reflect-metadata": "^1.5.5",
+        "rxjs": "5.0.0-beta.0",
+        "zone.js": "0.5.10"
+    },
+    "devDependencies": {
+        "css-loader": "^0.23.1",
+        "file-loader": "^0.8.5",
+        "html-webpack-plugin": "^2.8.1",
+        "imports-loader": "^0.6.5",
+        "karma": "^0.13.19",
+        "karma-coverage": "^0.5.3",
+        "karma-jasmine": "^0.3.7",
+        "karma-phantomjs-launcher": "^1.0.0",
+        "karma-sourcemap-loader": "^0.3.7",
+        "karma-story-reporter": "^0.3.1",
+        "karma-webpack": "1.7.0",
+        "node-sass": "^3.4.2",
+        "phantomjs-prebuilt": "2.1.4",
+        "phantomjs-polyfill": "0.0.1",
+        "raw-loader": "0.5.1",
+        "rimraf": "^2.5.1",
+        "sass-loader": "^3.1.2",
+        "ts-loader": "^0.8.1",
+        "typescript": "1.7.5",
+        "url-loader": "^0.5.7",
+        "webpack": "^1.12.13",
+        "webpack-dev-server": "^1.14.1"
+    },
+    "paths": {
+        "dist": "src/main/resources/static"
+    }
 }
