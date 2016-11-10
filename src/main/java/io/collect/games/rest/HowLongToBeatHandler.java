@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -32,6 +33,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 @RestController
 public class HowLongToBeatHandler {
 
+	@Timed
 	@RequestMapping(value = "/rest/howlongtobeat", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public Object howLongToBeat(@RequestParam String game) {

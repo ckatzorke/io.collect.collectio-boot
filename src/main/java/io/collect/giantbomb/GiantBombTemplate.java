@@ -15,21 +15,25 @@
  */
 package io.collect.giantbomb;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
+
+import com.codahale.metrics.annotation.Timed;
+
 import io.collect.giantbomb.config.GiantBombProperties;
 import io.collect.giantbomb.resources.GiantBombGame;
 import io.collect.giantbomb.resources.GiantBombMultiResourceResponse;
 import io.collect.giantbomb.resources.GiantBombPlatform;
 import io.collect.giantbomb.resources.GiantBombSingleResourceResponse;
-
-import java.util.Iterator;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
@@ -52,21 +56,15 @@ public class GiantBombTemplate {
 	 * @param options
 	 * @return
 	 */
-	public GiantBombMultiResourceResponse<GiantBombGame> getForGames(
-			GiantBombRequestOptions options) {
-		ResponseEntity<GiantBombMultiResourceResponse<GiantBombGame>> responseEntity = restTemplate
-				.exchange(
-						BASE_URI
-								+ "/games/?api_key={apikey}&format=json&limit={limit}&offset={offset}&field_list={field_list}&sort={sort}&filter={filter}",
-						HttpMethod.GET,
-						null,
-						new ParameterizedTypeReference<GiantBombMultiResourceResponse<GiantBombGame>>() {
-						}, props.getApikey(), options.limit, options.offset,
-						createFieldListParameter(options.fieldList),
-						options.sort == null ? "" : options.sort.toString(),
-						options.filter == null ? "" : options.filter.toString());
-		GiantBombMultiResourceResponse<GiantBombGame> resources = responseEntity
-				.getBody();
+	@Timed
+	public GiantBombMultiResourceResponse<GiantBombGame> getForGames(GiantBombRequestOptions options) {
+		ResponseEntity<GiantBombMultiResourceResponse<GiantBombGame>> responseEntity = restTemplate.exchange(
+				BASE_URI + "/games/?api_key={apikey}&format=json&limit={limit}&offset={offset}&field_list={field_list}&sort={sort}&filter={filter}",
+				HttpMethod.GET, null, new ParameterizedTypeReference<GiantBombMultiResourceResponse<GiantBombGame>>() {
+				}, props.getApikey(), options.limit, options.offset, createFieldListParameter(options.fieldList),
+				options.sort == null ? "" : options.sort.toString(),
+				options.filter == null ? "" : options.filter.toString());
+		GiantBombMultiResourceResponse<GiantBombGame> resources = responseEntity.getBody();
 		return resources;
 	}
 
@@ -76,21 +74,16 @@ public class GiantBombTemplate {
 	 * @param options
 	 * @return
 	 */
-	public GiantBombMultiResourceResponse<GiantBombPlatform> getForPlatforms(
-			GiantBombRequestOptions options) {
-		ResponseEntity<GiantBombMultiResourceResponse<GiantBombPlatform>> responseEntity = restTemplate
-				.exchange(
-						BASE_URI
-								+ "/platforms/?api_key={apikey}&format=json&limit={limit}&offset={offset}&field_list={field_list}&sort={sort}&filter={filter}",
-						HttpMethod.GET,
-						null,
-						new ParameterizedTypeReference<GiantBombMultiResourceResponse<GiantBombPlatform>>() {
-						}, props.getApikey(), options.limit, options.offset,
-						createFieldListParameter(options.fieldList),
-						options.sort == null ? "" : options.sort.toString(),
-						options.filter == null ? "" : options.filter.toString());
-		GiantBombMultiResourceResponse<GiantBombPlatform> resources = responseEntity
-				.getBody();
+	@Timed
+	public GiantBombMultiResourceResponse<GiantBombPlatform> getForPlatforms(GiantBombRequestOptions options) {
+		ResponseEntity<GiantBombMultiResourceResponse<GiantBombPlatform>> responseEntity = restTemplate.exchange(
+				BASE_URI + "/platforms/?api_key={apikey}&format=json&limit={limit}&offset={offset}&field_list={field_list}&sort={sort}&filter={filter}",
+				HttpMethod.GET, null,
+				new ParameterizedTypeReference<GiantBombMultiResourceResponse<GiantBombPlatform>>() {
+				}, props.getApikey(), options.limit, options.offset, createFieldListParameter(options.fieldList),
+				options.sort == null ? "" : options.sort.toString(),
+				options.filter == null ? "" : options.filter.toString());
+		GiantBombMultiResourceResponse<GiantBombPlatform> resources = responseEntity.getBody();
 		return resources;
 	}
 
@@ -116,21 +109,15 @@ public class GiantBombTemplate {
 	 * @param options
 	 * @return
 	 */
-	public GiantBombSingleResourceResponse<GiantBombGame> getForGame(String id,
-			GiantBombRequestOptions options) {
+	@Timed
+	public GiantBombSingleResourceResponse<GiantBombGame> getForGame(String id, GiantBombRequestOptions options) {
 		String gameId = fixId(GiantBombGame.ID_PREFIX, id);
-		ResponseEntity<GiantBombSingleResourceResponse<GiantBombGame>> responseEntity = restTemplate
-				.exchange(
-						BASE_URI
-								+ "/game/{id}/?api_key={apikey}&format=json&limit={limit}&offset={offset}&field_list={field_list}",
-						HttpMethod.GET,
-						null,
-						new ParameterizedTypeReference<GiantBombSingleResourceResponse<GiantBombGame>>() {
-						}, gameId, props.getApikey(), options.limit,
-						options.offset,
-						createFieldListParameter(options.fieldList));
-		GiantBombSingleResourceResponse<GiantBombGame> game = responseEntity
-				.getBody();
+		ResponseEntity<GiantBombSingleResourceResponse<GiantBombGame>> responseEntity = restTemplate.exchange(
+				BASE_URI + "/game/{id}/?api_key={apikey}&format=json&limit={limit}&offset={offset}&field_list={field_list}",
+				HttpMethod.GET, null, new ParameterizedTypeReference<GiantBombSingleResourceResponse<GiantBombGame>>() {
+				}, gameId, props.getApikey(), options.limit, options.offset,
+				createFieldListParameter(options.fieldList));
+		GiantBombSingleResourceResponse<GiantBombGame> game = responseEntity.getBody();
 		return game;
 	}
 
@@ -144,10 +131,8 @@ public class GiantBombTemplate {
 	 * @param query
 	 * @return
 	 */
-	public GiantBombMultiResourceResponse<GiantBombGame> searchForGame(
-			String query) {
-		return searchForGame(query, new GiantBombRequestOptions("id", "name",
-				"deck", "platforms", "image"));
+	public GiantBombMultiResourceResponse<GiantBombGame> searchForGame(String query) {
+		return searchForGame(query, new GiantBombRequestOptions("id", "name", "deck", "platforms", "image"));
 	}
 
 	/**
@@ -159,20 +144,14 @@ public class GiantBombTemplate {
 	 * @param options
 	 * @return
 	 */
-	public GiantBombMultiResourceResponse<GiantBombGame> searchForGame(
-			String query, GiantBombRequestOptions options) {
-		ResponseEntity<GiantBombMultiResourceResponse<GiantBombGame>> responseEntity = restTemplate
-				.exchange(
-						BASE_URI
-								+ "/search/?api_key={apikey}&format=json&query={query}&limit={limit}&offset={offset}&field_list={field_list}",
-						HttpMethod.GET,
-						null,
-						new ParameterizedTypeReference<GiantBombMultiResourceResponse<GiantBombGame>>() {
-						}, props.getApikey(), query, options.limit,
-						options.offset,
-						createFieldListParameter(options.fieldList));
-		GiantBombMultiResourceResponse<GiantBombGame> searchresult = responseEntity
-				.getBody();
+	@Timed
+	public GiantBombMultiResourceResponse<GiantBombGame> searchForGame(String query, GiantBombRequestOptions options) {
+		ResponseEntity<GiantBombMultiResourceResponse<GiantBombGame>> responseEntity = restTemplate.exchange(
+				BASE_URI + "/search/?api_key={apikey}&format=json&query={query}&limit={limit}&offset={offset}&field_list={field_list}",
+				HttpMethod.GET, null, new ParameterizedTypeReference<GiantBombMultiResourceResponse<GiantBombGame>>() {
+				}, props.getApikey(), query, options.limit, options.offset,
+				createFieldListParameter(options.fieldList));
+		GiantBombMultiResourceResponse<GiantBombGame> searchresult = responseEntity.getBody();
 		return searchresult;
 	}
 
@@ -193,14 +172,9 @@ public class GiantBombTemplate {
 	 * @return
 	 */
 	private Object createFieldListParameter(List<String> fieldList) {
-		StringBuilder builder = new StringBuilder("");
-		for (Iterator<String> iter = fieldList.iterator(); iter.hasNext();) {
-			String field = iter.next();
-			builder.append(field);
-			if (iter.hasNext()) {
-				builder.append(",");
-			}
-		}
-		return builder.toString();
+		String fields = fieldList	.stream()
+					.filter((field) -> !StringUtils.isEmpty(field))
+					.collect(Collectors.joining(","));
+		return fields;
 	}
 }

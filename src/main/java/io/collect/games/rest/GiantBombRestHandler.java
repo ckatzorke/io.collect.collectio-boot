@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
+
 import io.collect.giantbomb.GiantBombTemplate;
 import io.collect.giantbomb.resources.GiantBombGame;
 import io.collect.giantbomb.resources.GiantBombMultiResourceResponse;
@@ -36,6 +38,7 @@ public class GiantBombRestHandler {
 		this.gbTemplate = gbTemplate;
 	}
 
+	@Timed
 	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public Result search(@RequestParam String query, HttpServletRequest request) {
 		Result result = new Result();
