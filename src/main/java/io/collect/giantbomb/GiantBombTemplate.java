@@ -18,8 +18,9 @@ package io.collect.giantbomb;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -44,11 +45,18 @@ public class GiantBombTemplate {
 
 	public static final String BASE_URI = "http://www.giantbomb.com/api";
 
-	@Autowired
+	private static final Logger LOGGER = LoggerFactory.getLogger(GiantBombTemplate.class);
+
 	private GiantBombProperties props;
 
-	@Autowired
 	private RestTemplate restTemplate;
+
+	@Autowired
+	public GiantBombTemplate(GiantBombProperties props, RestTemplate restTemplate) {
+		this.props = props;
+		this.restTemplate = restTemplate;
+		LOGGER.info("Using GiantBombAPIKey: " + props.getApikey());
+	}
 
 	/**
 	 * Generic GET method for resources /games
@@ -173,8 +181,8 @@ public class GiantBombTemplate {
 	 */
 	private Object createFieldListParameter(List<String> fieldList) {
 		String fields = fieldList	.stream()
-					.filter((field) -> !StringUtils.isEmpty(field))
-					.collect(Collectors.joining(","));
+									.filter((field) -> !StringUtils.isEmpty(field))
+									.collect(Collectors.joining(","));
 		return fields;
 	}
 }
