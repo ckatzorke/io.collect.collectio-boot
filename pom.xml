@@ -99,24 +99,22 @@
 		</dependency>
 
 
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
 		<finalName>${project.name}</finalName>
-		<resources>
-			<resource>
-				<!-- add generated static content output from webpack build to resource 
-					classpath -->
-				<directory>target/generated-frontend</directory>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

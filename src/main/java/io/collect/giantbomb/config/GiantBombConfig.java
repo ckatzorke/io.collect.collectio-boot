@@ -6,9 +6,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Runtime config for services scoped for Giantbomb
+ * @author Christian Katzorke ckatzorke@gmail.com
+ *
+ */
 @Configuration
 public class GiantBombConfig {
-	@Bean(name = "restTemplate")
+	@Bean(name = "giantBombRestTemplate")
 	RestTemplate createResttemplate() {
 		// HttpComponentsClientHttpRequestFactory httpRequestFactory = new
 		// HttpComponentsClientHttpRequestFactory(

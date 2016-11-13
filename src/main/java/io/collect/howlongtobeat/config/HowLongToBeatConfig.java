@@ -13,37 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.collect.giantbomb.resources.test;
+package io.collect.howlongtobeat.config;
 
-import io.collect.giantbomb.config.GiantBombProperties;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 /**
+ * Runtime configuration for services scoped for Howlongtobeat.
+ * 
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
 @Configuration
-// @EnableAutoConfiguration
-@ComponentScan(basePackages = { "io.collect.giantbomb" })
-public class TestConfiguration {
-	@Autowired
-	GiantBombProperties properties;
-
-	@Bean(name="giantBombRestTemplate")
-	RestTemplate createRestTemplate() {
-		return new RestTemplate();
-	}
-
-	@PostConstruct
-	void createProperties() {
-		properties.setApikey("e316aff9ff7d945077dabd3a13ecebaad12bb70d");
-	}
+public class HowLongToBeatConfig {
 
 }
