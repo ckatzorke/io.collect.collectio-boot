@@ -70,12 +70,12 @@ public class TestGiantBombTemplateForSearch {
 		// read json from file
 		if (searchSor == null) {
 			searchSor = FileUtils.readFileToString(
-					resourceLoader.getResource("classpath:search-SOR.json")
+					resourceLoader.getResource("classpath:giantbomb/search-SOR.json")
 							.getFile(), "UTF-8");
 		}
 		if (searchSor_filtered == null) {
 			searchSor_filtered = FileUtils.readFileToString(resourceLoader
-					.getResource("classpath:search-SOR-filtered.json")
+					.getResource("classpath:giantbomb/search-SOR-filtered.json")
 					.getFile(), "UTF-8");
 		}
 

@@ -71,12 +71,12 @@ public class TestGiantBombTemplateForResources {
 		// // read json from file
 		if (games_unsorted == null) {
 			games_unsorted = FileUtils.readFileToString(resourceLoader
-					.getResource("classpath:games-unsorted.json").getFile(),
+					.getResource("classpath:giantbomb/games-unsorted.json").getFile(),
 					"UTF-8");
 		}
 		if (games_sorted == null) {
 			games_sorted = FileUtils.readFileToString(resourceLoader
-					.getResource("classpath:games-sorted.json").getFile(),
+					.getResource("classpath:giantbomb/games-sorted.json").getFile(),
 					"UTF-8");
 		}
 

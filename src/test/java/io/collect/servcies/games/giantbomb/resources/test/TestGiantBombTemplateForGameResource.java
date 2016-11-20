@@ -73,17 +73,17 @@ public class TestGiantBombTemplateForGameResource {
 		// read json from file
 		if (dott == null) {
 			dott = FileUtils.readFileToString(
-					resourceLoader.getResource("classpath:" + id + ".json")
+					resourceLoader.getResource("classpath:giantbomb/" + id + ".json")
 							.getFile(), "UTF-8");
 		}
 		if (dott_filtered == null) {
 			dott_filtered = FileUtils.readFileToString(
-					resourceLoader.getResource("classpath:" + id + "-filtered.json")
+					resourceLoader.getResource("classpath:giantbomb/" + id + "-filtered.json")
 							.getFile(), "UTF-8");
 		}
 		if (not_found == null) {
 			not_found= FileUtils.readFileToString(
-					resourceLoader.getResource("classpath:" + id + "_notfound.json")
+					resourceLoader.getResource("classpath:giantbomb/" + id + "_notfound.json")
 							.getFile(), "UTF-8");
 		}
 
