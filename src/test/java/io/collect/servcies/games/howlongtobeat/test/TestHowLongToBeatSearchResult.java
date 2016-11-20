@@ -40,7 +40,7 @@ public class TestHowLongToBeatSearchResult {
 	@Test
 	public void noresults() throws Exception {
 		final String searchterm = "witcherr";
-		String fragment = loadFragment("witcherr.html");
+		String fragment = loadFragment("empty.html");
 		HowLongToBeatSearchResult result = new HowLongToBeatSearchResult(searchterm, fragment);
 		assertEquals(searchterm, result.getSearchTerm());
 		assertNotNull(result.getHtmlFragment());
@@ -53,7 +53,7 @@ public class TestHowLongToBeatSearchResult {
 	@Test
 	public void multiresults() throws Exception {
 		final String searchterm = "witcher 3";
-		String fragment = loadFragment("witcher3.html");
+		String fragment = loadFragment("multi.html");
 		HowLongToBeatSearchResult result = new HowLongToBeatSearchResult(searchterm, fragment);
 		assertEquals(searchterm, result.getSearchTerm());
 		assertNotNull(result.getHtmlFragment());
@@ -87,7 +87,7 @@ public class TestHowLongToBeatSearchResult {
 	@Test
 	public void singleresult() throws Exception {
 		final String searchterm = "witcher 3: Wild hunt - game of the Year";
-		String fragment = loadFragment("witcher3goty.html");
+		String fragment = loadFragment("single.html");
 		HowLongToBeatSearchResult result = new HowLongToBeatSearchResult(searchterm, fragment);
 		assertEquals(1, result.getResultCount());
 		assertEquals(1, result	.getEntries()
@@ -99,6 +99,7 @@ public class TestHowLongToBeatSearchResult {
 											.get();
 
 		assertEquals(55.5, entry.getMainStory(), 0);
+		assertEquals(0, entry.getCompletionist(), 0);
 
 		assertEquals(
 				"http://www.howlongtobeat.com/gameimages/1472548261_main_The_Witcher_3_Game_of_the_Year_Edition.jpg",

@@ -27,7 +27,9 @@ import org.jsoup.select.Elements;
 
 /**
  * Encapsulates the responseBody from Howlongtobeat (html fragment). If
- * requested, the fragment is analyzed and destructured.
+ * requested, the fragment is analyzed and destructured. See
+ * src/test/resources/howlongtobeat/.. for sample result fragments (no result,
+ * single, multi)
  * 
  * @author Christian Katzorke ckatzorke@gmail.com
  *
@@ -80,53 +82,64 @@ public class HowLongToBeatSearchResult {
 
 	private void analyzeFragment() {
 		Document html = Jsoup.parseBodyFragment(htmlFragment);
-		Elements searchResultHeadline = html.getElementsByTag("h3");
-		if (searchResultHeadline.isEmpty()) {
-			this.resultCount = 0;
-			this.entries = new ArrayList<>();
+		if (isResult(html)) {
+			handleResult(html);
 		} else {
-			Elements liElements = html.getElementsByTag("li");
-			this.resultCount = liElements.size();
-			Set<HowLongToBeatEntry> entrySet = liElements	.stream()
-															.map(liElement -> {
-																Element anchor = liElement	.getElementsByTag("a")
+			handleNoResult();
+		}
+	}
+
+	private void handleResult(Document html) {
+		Elements liElements = html.getElementsByTag("li");
+		this.resultCount = liElements.size();
+		Set<HowLongToBeatEntry> entrySet = liElements	.stream()
+														.map(liElement -> {
+															Element gameTitle = liElement	.getElementsByTag("a")
 																							.get(0);
-																HowLongToBeatEntry entry = new HowLongToBeatEntry();
-																entry.setName(anchor.attr("title"));
-																entry.setDetailLink(HowLongToBeatService.HLTB_URL
-																		+ anchor.attr("href"));
-																entry.setImageSource(HowLongToBeatService.HLTB_URL
-																		+ anchor.getElementsByTag("img")
+															HowLongToBeatEntry entry = new HowLongToBeatEntry();
+															entry.setName(gameTitle.attr("title"));
+															entry.setDetailLink(HowLongToBeatService.HLTB_URL
+																	+ gameTitle.attr("href"));
+															entry.setImageSource(HowLongToBeatService.HLTB_URL
+																	+ gameTitle	.getElementsByTag("img")
 																				.get(0)
 																				.attr("src"));
-																Elements times = liElement.getElementsByClass(
-																		"center");
-																double mainStory = parseTime(times	.get(0)
-																						.text());
-																double mainAndExtra = parseTime(times	.get(1)
-																							.text());
-																double completionist = parseTime(times	.get(2)
-																							.text());
-																entry.setMainStory(mainStory);
-																entry.setMainAndExtra(mainAndExtra);
-																entry.setCompletionist(completionist);
-																return entry;
-															})
-															.collect(Collectors.toSet());
-			this.entries = new ArrayList<>(entrySet);
-		}
+															Elements times = liElement.getElementsByClass("center");
+															double mainStory = parseTime(times	.get(0)
+																								.text());
+															double mainAndExtra = parseTime(times	.get(1)
+																									.text());
+															double completionist = parseTime(times	.get(2)
+																									.text());
+															entry.setMainStory(mainStory);
+															entry.setMainAndExtra(mainAndExtra);
+															entry.setCompletionist(completionist);
+															return entry;
+														})
+														.collect(Collectors.toSet());
+		this.entries = new ArrayList<>(entrySet);
+	}
+
+	private void handleNoResult() {
+		this.resultCount = 0;
+		this.entries = new ArrayList<>();
+	}
+
+	private boolean isResult(Document html) {
+		Elements searchResultHeadline = html.getElementsByTag("h3");
+		return searchResultHeadline.size() > 0;
 	}
 
 	private double parseTime(String text) {
 		// "65&#189; Hours"; "--" if not known
-		if(text.equals("--")){
+		if (text.equals("--")) {
 			return 0;
 		}
-		if(text.indexOf("½")>-1){
-			return 0.5 + Double.parseDouble(text.substring(0,  text.indexOf("½")));
-					
+		if (text.indexOf("½") > -1) {
+			return 0.5 + Double.parseDouble(text.substring(0, text.indexOf("½")));
+
 		}
-		return Double.parseDouble(text.substring(0,  text.indexOf(" ")));
+		return Double.parseDouble(text.substring(0, text.indexOf(" ")));
 	}
 
 }
