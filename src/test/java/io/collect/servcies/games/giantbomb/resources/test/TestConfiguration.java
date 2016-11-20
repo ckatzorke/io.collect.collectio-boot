@@ -31,7 +31,7 @@ import io.collect.services.games.giantbomb.config.GiantBombProperties;
  */
 @Configuration
 // @EnableAutoConfiguration
-@ComponentScan(basePackages = { "io.collect.giantbomb" })
+@ComponentScan(basePackages = { "io.collect.services.games.giantbomb" })
 public class TestConfiguration {
 	@Autowired
 	GiantBombProperties properties;

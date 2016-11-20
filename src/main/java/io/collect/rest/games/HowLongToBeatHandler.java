@@ -48,8 +48,8 @@ public class HowLongToBeatHandler {
 	public Result howLongToBeat(@RequestParam String game, HttpServletRequest request) {
 		Result result = new Result();
 		result.add(new Link(request.getRequestURI()));
-		result.addResultObject("html", this.howLongToBeatService.searchAsHtml(game));
+		result.addResultObject("searchResult", this.howLongToBeatService.search(game));
 		return result;
 	}
-
+	
 }

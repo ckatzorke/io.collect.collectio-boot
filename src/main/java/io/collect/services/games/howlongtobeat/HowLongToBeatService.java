@@ -37,16 +37,14 @@ public class HowLongToBeatService {
 
 	public static final String ERROR_HLTB_GONE = "HLTB_GONE";
 	public static final String HLTB_URL = "http://www.howlongtobeat.com/";
-	private static final String HLTB_SEARCH_URL = HLTB_URL + "search_main.php";
+	private static final String HLTB_SEARCH_URL = "http://howlongtobeat.com/search_main.php";
 
 	/**
-	 * Plain html search. Does not know anything about the result. Can throw a
-	 * 
 	 * @param gameName
 	 * @return
 	 */
 	@Timed(name = "howlongtobeat#searchAsHtml")
-	public String searchAsHtml(String gameName) {
+	public HowLongToBeatSearchResult search(String gameName) {
 		HttpResponse<String> response;
 		try {
 			response = Unirest	.post(HLTB_SEARCH_URL)
@@ -63,7 +61,7 @@ public class HowLongToBeatService {
 								.field("length_max", "")
 								.field("detail", "0")
 								.asString();
-			return response.getBody();
+			return new HowLongToBeatSearchResult(gameName, response.getBody());
 		} catch (UnirestException e) {
 			throw new ContextedRuntimeException("Howlongtobeat not available", e)	.addContextValue("errorId",
 					ERROR_HLTB_GONE)
