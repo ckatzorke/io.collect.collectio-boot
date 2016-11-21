@@ -23,6 +23,7 @@ public class HowLongToBeatEntry {
 
 	private String name;
 	private String detailLink;
+	private String gameId;
 	private String imageSource;
 	private double mainStory;
 	private double mainAndExtra;
@@ -118,14 +119,31 @@ public class HowLongToBeatEntry {
 		this.completionist = completionist;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * @return the gameId
+	 */
+	public String getGameId() {
+		return gameId;
+	}
+
+	/**
+	 * @param gameId
+	 *            the gameId to set
+	 */
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "HowLongToBeatEntry [name=" + name + ", detailLink=" + detailLink + ", imageSource=" + imageSource
-				+ ", mainStory=" + mainStory + ", mainAndExtra=" + mainAndExtra + ", completionist=" + completionist
-				+ "]";
+		return "HowLongToBeatEntry [name=" + name + ", detailLink=" + detailLink + ", gameId=" + gameId
+				+ ", imageSource=" + imageSource + ", mainStory=" + mainStory + ", mainAndExtra=" + mainAndExtra
+				+ ", completionist=" + completionist + "]";
 	}
 
 }

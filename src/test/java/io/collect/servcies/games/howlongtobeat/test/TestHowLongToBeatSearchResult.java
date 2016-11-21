@@ -105,6 +105,7 @@ public class TestHowLongToBeatSearchResult {
 				"http://www.howlongtobeat.com/gameimages/1472548261_main_The_Witcher_3_Game_of_the_Year_Edition.jpg",
 				entry.getImageSource());
 		assertEquals("http://www.howlongtobeat.com/game.php?id=40171", entry.getDetailLink());
+		assertEquals("40171", entry.getGameId());
 
 	}
 

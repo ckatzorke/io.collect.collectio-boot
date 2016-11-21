@@ -98,8 +98,10 @@ public class HowLongToBeatSearchResult {
 																							.get(0);
 															HowLongToBeatEntry entry = new HowLongToBeatEntry();
 															entry.setName(gameTitle.attr("title"));
-															entry.setDetailLink(HowLongToBeatService.HLTB_URL
-																	+ gameTitle.attr("href"));
+															String href = HowLongToBeatService.HLTB_URL
+																	+ gameTitle.attr("href");
+															entry.setDetailLink(href);
+															entry.setGameId(href.substring(href.indexOf("?id=") + 4));
 															entry.setImageSource(HowLongToBeatService.HLTB_URL
 																	+ gameTitle	.getElementsByTag("img")
 																				.get(0)
