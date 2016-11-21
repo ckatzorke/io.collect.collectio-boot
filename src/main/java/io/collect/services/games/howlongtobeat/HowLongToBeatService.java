@@ -15,61 +15,19 @@
  */
 package io.collect.services.games.howlongtobeat;
 
-import org.apache.commons.lang3.exception.ContextedRuntimeException;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
-
-import com.codahale.metrics.annotation.Timed;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
 /**
- * Serviceencapsulation for calls against
- * <a href="http://howlongtobeat.com/">howlongtobeat.com</a>. Great website,
- * great service.
- * 
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-@Service
-public class HowLongToBeatService {
+public interface HowLongToBeatService {
 
-	public static final String ERROR_HLTB_GONE = "HLTB_GONE";
-	public static final String HLTB_URL = "http://www.howlongtobeat.com/";
-	private static final String HLTB_SEARCH_URL = "http://howlongtobeat.com/search_main.php";
+	String ERROR_HLTB_GONE = "HLTB_GONE";
+	String HLTB_URL = "http://www.howlongtobeat.com/";
 
 	/**
 	 * @param gameName
 	 * @return
 	 */
-	@Timed(name = "howlongtobeat#searchAsHtml")
-	public HowLongToBeatSearchResult search(String gameName) {
-		HttpResponse<String> response;
-		try {
-			response = Unirest	.post(HLTB_SEARCH_URL)
-								.header("accept", "*/*")
-								.header("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-								.queryString("page", "1")
-								.field("queryString", gameName)
-								.field("t", "games")
-								.field("sorthead", "popular")
-								.field("sortd", "Normal Order")
-								.field("plat", "")
-								.field("length_type", "main")
-								.field("length_min", "")
-								.field("length_max", "")
-								.field("detail", "0")
-								.asString();
-			return new HowLongToBeatSearchResult(gameName, response.getBody());
-		} catch (UnirestException e) {
-			throw new ContextedRuntimeException("Howlongtobeat not available", e)	.addContextValue("errorId",
-					ERROR_HLTB_GONE)
-																					.addContextValue("gameName",
-																							gameName)
-																					.addContextValue("url",
-																							HLTB_SEARCH_URL);
-		}
-	}
+	HowLongToBeatSearchResult search(String gameName);
 
 }

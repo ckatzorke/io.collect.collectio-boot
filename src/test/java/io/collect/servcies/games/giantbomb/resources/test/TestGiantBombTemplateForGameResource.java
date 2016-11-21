@@ -19,6 +19,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+import io.collect.integrationtests.TestConfiguration;
 import io.collect.services.games.giantbomb.GiantBombRequestOptions;
 import io.collect.services.games.giantbomb.GiantBombTemplate;
 import io.collect.services.games.giantbomb.resources.GiantBombGame;

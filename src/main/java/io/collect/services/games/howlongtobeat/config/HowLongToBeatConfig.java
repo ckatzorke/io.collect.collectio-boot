@@ -15,7 +15,11 @@
  */
 package io.collect.services.games.howlongtobeat.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.collect.services.games.howlongtobeat.HowLongToBeatService;
+import io.collect.services.games.howlongtobeat.HowLongToBeatServiceDefaultImpl;
 
 /**
  * Runtime configuration for services scoped for Howlongtobeat.
@@ -26,4 +30,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HowLongToBeatConfig {
 
+	@Bean(name = "howLongToBeatService")
+	HowLongToBeatService createHowLongToBeatService() {
+		HowLongToBeatService howLongToBeatService = new HowLongToBeatServiceDefaultImpl();
+		return howLongToBeatService;
+	}
 }
