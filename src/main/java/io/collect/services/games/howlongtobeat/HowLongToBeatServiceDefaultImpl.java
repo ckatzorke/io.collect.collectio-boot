@@ -43,7 +43,7 @@ public class HowLongToBeatServiceDefaultImpl implements HowLongToBeatService {
 	 * .lang.String)
 	 */
 	@Override
-	@Timed(name = "howlongtobeat#search")
+	@Timed
 	public HowLongToBeatSearchResult search(String gameName) {
 		HttpResponse<String> response;
 		try {

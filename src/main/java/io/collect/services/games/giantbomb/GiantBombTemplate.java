@@ -103,6 +103,7 @@ public class GiantBombTemplate {
 	 * @param id
 	 * @return
 	 */
+	@Timed
 	public GiantBombSingleResourceResponse<GiantBombGame> getForGame(String id) {
 		return getForGame(id, new GiantBombRequestOptions());
 	}
@@ -139,6 +140,7 @@ public class GiantBombTemplate {
 	 * @param query
 	 * @return
 	 */
+	@Timed
 	public GiantBombMultiResourceResponse<GiantBombGame> searchForGame(String query) {
 		return searchForGame(query, new GiantBombRequestOptions("id", "name", "deck", "platforms", "image"));
 	}
