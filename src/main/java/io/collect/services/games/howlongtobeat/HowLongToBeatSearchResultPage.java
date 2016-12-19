@@ -15,6 +15,8 @@
  */
 package io.collect.services.games.howlongtobeat;
 
+import static io.collect.services.games.howlongtobeat.HowLongToBeatUtil.parseTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -34,14 +36,14 @@ import org.jsoup.select.Elements;
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-public class HowLongToBeatSearchResult {
+public class HowLongToBeatSearchResultPage {
 
 	private final String htmlFragment;
 	private final String searchTerm;
 	private int resultCount = -1;
 	private List<HowLongToBeatEntry> entries;
 
-	public HowLongToBeatSearchResult(String term, String fragment) {
+	public HowLongToBeatSearchResultPage(String term, String fragment) {
 		this.searchTerm = term;
 		this.htmlFragment = fragment;
 	}
@@ -130,18 +132,6 @@ public class HowLongToBeatSearchResult {
 	private boolean isResult(Document html) {
 		Elements searchResultHeadline = html.getElementsByTag("h3");
 		return searchResultHeadline.size() > 0;
-	}
-
-	private double parseTime(String text) {
-		// "65&#189; Hours"; "--" if not known
-		if (text.equals("--")) {
-			return 0;
-		}
-		if (text.indexOf("½") > -1) {
-			return 0.5 + Double.parseDouble(text.substring(0, text.indexOf("½")));
-
-		}
-		return Double.parseDouble(text.substring(0, text.indexOf(" ")));
 	}
 
 }

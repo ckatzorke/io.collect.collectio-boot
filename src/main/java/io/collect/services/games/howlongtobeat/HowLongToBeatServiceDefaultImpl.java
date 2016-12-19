@@ -34,6 +34,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 public class HowLongToBeatServiceDefaultImpl implements HowLongToBeatService {
 
 	private static final String HLTB_SEARCH_URL = "http://howlongtobeat.com/search_main.php";
+	private static final String HLTB_DETAIL_URL = "http://howlongtobeat.com/game.php";
 
 	/*
 	 * (non-Javadoc)
@@ -44,7 +45,7 @@ public class HowLongToBeatServiceDefaultImpl implements HowLongToBeatService {
 	 */
 	@Override
 	@Timed
-	public HowLongToBeatSearchResult search(String gameName) {
+	public HowLongToBeatSearchResultPage search(String gameName) {
 		HttpResponse<String> response;
 		try {
 			response = Unirest	.post(HLTB_SEARCH_URL)
@@ -61,7 +62,7 @@ public class HowLongToBeatServiceDefaultImpl implements HowLongToBeatService {
 								.field("length_max", "")
 								.field("detail", "0")
 								.asString();
-			return new HowLongToBeatSearchResult(gameName, response.getBody());
+			return new HowLongToBeatSearchResultPage(gameName, response.getBody());
 		} catch (UnirestException e) {
 			throw new ContextedRuntimeException("Howlongtobeat not available", e)	.addContextValue("errorId",
 					ERROR_HLTB_GONE)
@@ -69,6 +70,33 @@ public class HowLongToBeatServiceDefaultImpl implements HowLongToBeatService {
 																							gameName)
 																					.addContextValue("url",
 																							HLTB_SEARCH_URL);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.collect.services.games.howlongtobeat.HowLongToBeatService#detail(java.
+	 * lang.String)
+	 */
+	@Override
+	public HowLongToBeatEntry detail(String gameId) {
+		HttpResponse<String> response;
+		try {
+			response = Unirest	.get(HLTB_DETAIL_URL)
+								.header("accept", "text/html")
+								.queryString("id", gameId)
+								.asString();
+			HowLongToBeatDetailPage detailPage = new HowLongToBeatDetailPage(response.getBody(),
+					HLTB_DETAIL_URL + "?id=" + gameId, gameId);
+			return detailPage.getEntry();
+		} catch (UnirestException e) {
+			throw new ContextedRuntimeException("Howlongtobeat not available", e)	.addContextValue("errorId",
+					ERROR_HLTB_GONE)
+																					.addContextValue("gameId", gameId)
+																					.addContextValue("url",
+																							HLTB_DETAIL_URL);
 		}
 	}
 

@@ -13,27 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.collect.services.games.howlongtobeat;
+package io.collect.model.games;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-public interface HowLongToBeatService {
-
-	String ERROR_HLTB_GONE = "HLTB_GONE";
-	String HLTB_URL = "http://www.howlongtobeat.com/";
-
-	/**
-	 * @param gameName
-	 * @return
-	 */
-	HowLongToBeatSearchResultPage search(String gameName);
-	
-	/**
-	 * @param gameId
-	 * @return
-	 */
-	HowLongToBeatEntry detail(String gameId);
-
+public enum Platform {
+	PS, PS2, PS3, PS4, PSP, PSVITA, XBOX, XBOX360, XBOXONE, N3DS, DS, GAMEBOY, NES, SNES, N64, GAMECUBE, WII, WIIU, PC, STEAM, NEOGEO, SATURN, MEGADRIVE, DREAMCAST;
 }

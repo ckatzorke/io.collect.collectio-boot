@@ -19,21 +19,16 @@ package io.collect.services.games.howlongtobeat;
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-public interface HowLongToBeatService {
+public class HowLongToBeatUtil {
+	public static double parseTime(String text) {
+		// "65&#189; Hours"; "--" if not known
+		if (text.equals("--")) {
+			return 0;
+		}
+		if (text.indexOf("½") > -1) {
+			return 0.5 + Double.parseDouble(text.substring(0, text.indexOf("½")));
 
-	String ERROR_HLTB_GONE = "HLTB_GONE";
-	String HLTB_URL = "http://www.howlongtobeat.com/";
-
-	/**
-	 * @param gameName
-	 * @return
-	 */
-	HowLongToBeatSearchResultPage search(String gameName);
-	
-	/**
-	 * @param gameId
-	 * @return
-	 */
-	HowLongToBeatEntry detail(String gameId);
-
+		}
+		return Double.parseDouble(text.substring(0, text.indexOf(" ")));
+	}
 }

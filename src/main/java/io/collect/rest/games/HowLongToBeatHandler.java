@@ -44,12 +44,23 @@ public class HowLongToBeatHandler {
 	}
 
 	@Timed
-	@RequestMapping(value = "/rest/howlongtobeat", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE})
+	@RequestMapping(value = "/rest/howlongtobeat", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public Result howLongToBeat(@RequestParam String game, HttpServletRequest request) {
 		Result result = new Result();
 		result.add(new Link(request.getRequestURI()));
 		result.addResultObject("searchResult", this.howLongToBeatService.search(game));
 		return result;
 	}
-	
+
+	@Timed
+	@RequestMapping(value = "/rest/howlongtobeatdetail", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public Result howLongToBeatDetails(@RequestParam String gameId, HttpServletRequest request) {
+		Result result = new Result();
+		result.add(new Link(request.getRequestURI()));
+		result.addResultObject("entry", this.howLongToBeatService.detail(gameId));
+		return result;
+	}
+
 }

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 
 import io.collect.services.games.howlongtobeat.HowLongToBeatEntry;
-import io.collect.services.games.howlongtobeat.HowLongToBeatSearchResult;
+import io.collect.services.games.howlongtobeat.HowLongToBeatSearchResultPage;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
@@ -41,7 +41,7 @@ public class TestHowLongToBeatSearchResult {
 	public void noresults() throws Exception {
 		final String searchterm = "witcherr";
 		String fragment = loadFragment("empty.html");
-		HowLongToBeatSearchResult result = new HowLongToBeatSearchResult(searchterm, fragment);
+		HowLongToBeatSearchResultPage result = new HowLongToBeatSearchResultPage(searchterm, fragment);
 		assertEquals(searchterm, result.getSearchTerm());
 		assertNotNull(result.getHtmlFragment());
 		assertEquals(fragment, result.getHtmlFragment());
@@ -54,7 +54,7 @@ public class TestHowLongToBeatSearchResult {
 	public void multiresults() throws Exception {
 		final String searchterm = "witcher 3";
 		String fragment = loadFragment("multi.html");
-		HowLongToBeatSearchResult result = new HowLongToBeatSearchResult(searchterm, fragment);
+		HowLongToBeatSearchResultPage result = new HowLongToBeatSearchResultPage(searchterm, fragment);
 		assertEquals(searchterm, result.getSearchTerm());
 		assertNotNull(result.getHtmlFragment());
 		assertEquals(fragment, result.getHtmlFragment());
@@ -88,7 +88,7 @@ public class TestHowLongToBeatSearchResult {
 	public void singleresult() throws Exception {
 		final String searchterm = "witcher 3: Wild hunt - game of the Year";
 		String fragment = loadFragment("single.html");
-		HowLongToBeatSearchResult result = new HowLongToBeatSearchResult(searchterm, fragment);
+		HowLongToBeatSearchResultPage result = new HowLongToBeatSearchResultPage(searchterm, fragment);
 		assertEquals(1, result.getResultCount());
 		assertEquals(1, result	.getEntries()
 								.size());
