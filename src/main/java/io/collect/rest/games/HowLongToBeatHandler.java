@@ -1,18 +1,3 @@
-/*
- * Copyright (C) Christian Katzorke <ckatzorke@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.collect.rest.games;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +15,8 @@ import com.codahale.metrics.annotation.Timed;
 import io.collect.services.games.howlongtobeat.HowLongToBeatService;
 
 /**
+ * {@link RestController} for handling request for the {@link HowLongToBeatService}.
+ * Requests to this controllers' endpoint are returning a generic {@link Result} object as json, containing a <b>>result</b> property
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
@@ -43,6 +30,12 @@ public class HowLongToBeatHandler {
 		this.howLongToBeatService = howlongtobeatService;
 	}
 
+  /**
+   * Endpoint <b>/rest/howlongtobeat</b> that performs a search against the search interface of {@link HowLongToBeatService}. See {@link HowLongToBeatService} for more details.
+   * @param game the searchinput text, like &quot;Dark Souls&quot;
+   * @param request injected HttpRequest
+   * @return result, containing a {@link HowLongToBeatSearchResultPage} as <b>result</b> property
+   */
 	@Timed
 	@RequestMapping(value = "/rest/howlongtobeat", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
@@ -53,6 +46,12 @@ public class HowLongToBeatHandler {
 		return result;
 	}
 
+  /**
+   * Endpoint <b>/rest/howlongtobeatdetail</b> that fetches a specific game detail via the interface of {@link HowLongToBeatService}
+   * @param gameId the id of the game, as used by the webpage <a href="http://howlongtobeat.com">Howlongtobeat</a>, like &quot;16624s&quot; for <b>Bioshock Infinit: Burial at the Sea DLC</b>
+   * @param request injected HttpRequest
+   * @return result, containing a {@link HowLongToBeatEntry} as <b>result</b> property
+   */
 	@Timed
 	@RequestMapping(value = "/rest/howlongtobeatdetail", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })

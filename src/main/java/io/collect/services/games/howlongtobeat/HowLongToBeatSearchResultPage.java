@@ -1,18 +1,3 @@
-/*
- * Copyright (C) Christian Katzorke <ckatzorke@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.collect.services.games.howlongtobeat;
 
 import static io.collect.services.games.howlongtobeat.HowLongToBeatUtil.parseTime;
@@ -28,11 +13,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * Encapsulates the responseBody from Howlongtobeat (html fragment). If
+ * Encapsulates the responseBody from an embedded search from <a href="http://howlongtobeat.com">Howlongtobeat</a> (html fragment). If
  * requested, the fragment is analyzed and destructured. See
- * src/test/resources/howlongtobeat/.. for sample result fragments (no result,
- * single, multi)
- * 
+ * <b>src/test/resources/howlongtobeat/empty|multi|single.html</b> for sample result fragments.
+ *
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
@@ -56,14 +40,14 @@ public class HowLongToBeatSearchResultPage {
 	}
 
 	/**
-	 * @return the searchTerm
+	 * @return the searchTerm that was used
 	 */
 	public String getSearchTerm() {
 		return searchTerm;
 	}
 
 	/**
-	 * @return the resultCount
+	 * @return the resultCount, 0 if no results, 1 if single result >1 for multiple hits
 	 */
 	public int getResultCount() {
 		if (resultCount == -1) {
@@ -95,7 +79,7 @@ public class HowLongToBeatSearchResultPage {
 		Elements liElements = html.getElementsByTag("li");
 		this.resultCount = liElements.size();
 		Set<HowLongToBeatEntry> entrySet = liElements	.stream()
-														.map(liElement -> {
+														.map(liElement -> { //TODO refactor lambda as seperate method
 															Element gameTitle = liElement	.getElementsByTag("a")
 																							.get(0);
 															HowLongToBeatEntry entry = new HowLongToBeatEntry();

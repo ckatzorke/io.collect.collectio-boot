@@ -1,21 +1,8 @@
-/*
- * Copyright (C) Christian Katzorke <ckatzorke@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.collect.services.games.howlongtobeat;
 
 /**
+ * Encapsulates a single entry with all relevant information
+ *
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
@@ -30,7 +17,7 @@ public class HowLongToBeatEntry {
 	private double completionist;
 
 	/**
-	 * @return the name
+	 * @return the name of the game
 	 */
 	public String getName() {
 		return name;
@@ -45,7 +32,7 @@ public class HowLongToBeatEntry {
 	}
 
 	/**
-	 * @return the detailLink
+	 * @return the detailLink as used in <a href="http://howlongtobeat.com">Howlongtobeat</a>
 	 */
 	public String getDetailLink() {
 		return detailLink;
@@ -60,7 +47,7 @@ public class HowLongToBeatEntry {
 	}
 
 	/**
-	 * @return the imageSource
+	 * @return the imageSource of the cover image
 	 */
 	public String getImageSource() {
 		return imageSource;
@@ -75,45 +62,42 @@ public class HowLongToBeatEntry {
 	}
 
 	/**
-	 * @return the mainStory
+	 * @return the amount of hours to play the main story
 	 */
 	public double getMainStory() {
 		return mainStory;
 	}
 
 	/**
-	 * @param mainStory
-	 *            the mainStory to set
+	 * @param the amount of hours to play the main story
 	 */
 	public void setMainStory(double mainStory) {
 		this.mainStory = mainStory;
 	}
 
 	/**
-	 * @return the mainAndExtra
+	 * @return the amount of hours to play the main story plus some extras
 	 */
 	public double getMainAndExtra() {
 		return mainAndExtra;
 	}
 
 	/**
-	 * @param mainAndExtra
-	 *            the mainAndExtra to set
+	 * @param the amount of hours to play the main story plus some extras
 	 */
 	public void setMainAndExtra(double mainAndExtra) {
 		this.mainAndExtra = mainAndExtra;
 	}
 
 	/**
-	 * @return the completionist
+	 * @return the amount of hours to 100% complete the game
 	 */
 	public double getCompletionist() {
 		return completionist;
 	}
 
 	/**
-	 * @param completionist
-	 *            the completionist to set
+	 * @param the amount of hours to 100% complete the game
 	 */
 	public void setCompletionist(double completionist) {
 		this.completionist = completionist;
@@ -136,7 +120,7 @@ public class HowLongToBeatEntry {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

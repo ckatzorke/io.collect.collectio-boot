@@ -1,25 +1,18 @@
-/*
- * Copyright (C) Christian Katzorke <ckatzorke@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.collect.services.games.howlongtobeat;
 
 /**
+ * Utility class
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
 public class HowLongToBeatUtil {
+
+  /**
+   * Utility method used for parsing a given input text (like &quot;44&#189;&quot;) as double (like &quot;44.5&quot;).
+   * The input text represents the amount of hours needed to play this game.
+   * @param text representing the hours
+   * @return the pares time as double
+   */
 	public static double parseTime(String text) {
 		// "65&#189; Hours"; "--" if not known
 		if (text.equals("--")) {

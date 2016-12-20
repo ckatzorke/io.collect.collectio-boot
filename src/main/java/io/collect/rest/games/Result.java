@@ -1,6 +1,3 @@
-/*
- * Copyright (C) Christian Katzorke <ckatzorke@gmail.com>
- */
 package io.collect.rest.games;
 
 import java.io.Serializable;
@@ -11,7 +8,7 @@ import org.springframework.hateoas.ResourceSupport;
 
 /**
  * The generic json result
- * 
+ *
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */

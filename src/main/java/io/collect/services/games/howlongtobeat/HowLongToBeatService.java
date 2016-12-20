@@ -1,21 +1,7 @@
-/*
- * Copyright (C) Christian Katzorke <ckatzorke@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.collect.services.games.howlongtobeat;
 
 /**
+ * Service interface for interaction with <a href="http://howlongtobeat.com">Howlongtobeat</a>.
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
@@ -25,14 +11,16 @@ public interface HowLongToBeatService {
 	String HLTB_URL = "http://www.howlongtobeat.com/";
 
 	/**
+   * Searches for a given string, parsing the result as {@link HowLongToBeatSearchResultPage}
 	 * @param gameName
 	 * @return
 	 */
 	HowLongToBeatSearchResultPage search(String gameName);
-	
+
 	/**
-	 * @param gameId
-	 * @return
+   * Get the details for a specific game, represented by an id (as used by <a href="http://howlongtobeat.com">Howlongtobeat</a>)
+	 * @param gameId the id used by <a href="http://howlongtobeat.com">Howlongtobeat</a>, like 16624 or 35878
+	 * @return a detail entry
 	 */
 	HowLongToBeatEntry detail(String gameId);
 
