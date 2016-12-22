@@ -23,6 +23,7 @@
 		<start-class>io.collect.CollectioApplication</start-class>
 		<java.version>1.8</java.version>
 		<docker.image.prefix>collectio</docker.image.prefix>
+		<spring-boot-admin.version>1.4.4</spring-boot-admin.version>
 	</properties>
 
 	<dependencies>
@@ -53,6 +54,16 @@
 			<groupId>org.springframework.hateoas</groupId>
 			<artifactId>spring-hateoas</artifactId>
 		</dependency>
+
+
+
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+			<version>${spring-boot-admin.version}</version>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>com.mashape.unirest</groupId>

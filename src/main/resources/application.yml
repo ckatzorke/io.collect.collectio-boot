@@ -5,3 +5,6 @@ server:
 giantbomb:
   apikey: 
 
+
+
+spring.boot.admin.url: http://localhost:8081
