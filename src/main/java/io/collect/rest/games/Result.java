@@ -1,8 +1,6 @@
 package io.collect.rest.games;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import org.springframework.hateoas.ResourceSupport;
 
@@ -12,13 +10,13 @@ import org.springframework.hateoas.ResourceSupport;
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-public class Result extends ResourceSupport implements Serializable {
+public class Result<T> extends ResourceSupport implements Serializable {
 	private static final long serialVersionUID = 2569196901438096359L;
 
-	public final Map<String, Object> result = new LinkedHashMap<String, Object>();
+	public final T result;
 
-
-	public void addResultObject(String key, Object object) {
-		result.put(key, object);
+	public Result(T result) {
+		this.result = result;
 	}
+
 }
