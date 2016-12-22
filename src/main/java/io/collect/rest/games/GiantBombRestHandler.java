@@ -40,25 +40,24 @@ public class GiantBombRestHandler {
 
 	@Timed
 	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public Result search(@RequestParam String query, HttpServletRequest request) {
-		Result result = new Result();
+	public Result<GiantBombMultiResourceResponse<GiantBombGame>> search(@RequestParam String query,
+			HttpServletRequest request) {
+		Result<GiantBombMultiResourceResponse<GiantBombGame>> result = new Result<>(gbTemplate.searchForGame(query));
 		result.add(new Link(request.getRequestURI()));
-		GiantBombMultiResourceResponse<GiantBombGame> searchresult = gbTemplate.searchForGame(query);
-		result.addResultObject("searchresult", searchresult);
 		return result;
 	}
 
-	@RequestMapping(value = "/game/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public Result game(@PathVariable int id, HttpServletRequest request) {
-		Result result = new Result();
-		result.add(new Link(request.getRequestURI()));
+	@RequestMapping(value = "/game/{id}", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public Result<GiantBombGame> game(@PathVariable int id, HttpServletRequest request) {
 		GiantBombGame gameDetails = null;
 		GiantBombSingleResourceResponse<GiantBombGame> game = gbTemplate.getForGame(String.valueOf(id));
 		// check if valid response
 		if ("ok".equals(game.error.toLowerCase())) {
 			gameDetails = game.results;
 		}
-		result.addResultObject("game", gameDetails);
+		Result<GiantBombGame> result = new Result<>(gameDetails);
+		result.add(new Link(request.getRequestURI()));
 		return result;
 	}
 }

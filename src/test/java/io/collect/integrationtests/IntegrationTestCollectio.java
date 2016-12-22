@@ -31,10 +31,25 @@ public class IntegrationTestCollectio {
 				.get("/rest/howlongtobeat")
 				.then()
 				.statusCode(HttpStatus.OK.value())
-				.body("result.searchResult.resultCount", equalTo(1))
+				.body("result.resultCount", equalTo(1))
 				.and()
-				.body("result.searchResult.entries[0].detailLink",
-						equalTo("http://www.howlongtobeat.com/game.php?id=7373"));
+				.body("result.entries[0].detailLink",
+						equalTo("http://www.howlongtobeat.com/game.php?id=7372"));
+	}
+
+	@Test
+	public void hltbDetails() throws Exception {
+		given()	.param("gameId", "3537")
+				.when()
+				.get("/rest/howlongtobeatdetail")
+				.then()
+				.statusCode(HttpStatus.OK.value())
+				.body("result.gameId", equalTo("3537"))
+				.and()
+				.body("result.detailLink", equalTo("http://howlongtobeat.com/game.php?id=3537"))
+				.and()
+				.body("result.imageSource",
+						equalTo("http://howlongtobeat.com/gameimages/final-fantasy-15-box-art-280x400.jpg"));
 	}
 
 }
