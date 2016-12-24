@@ -1,6 +1,7 @@
 package io.collect.services.games.howlongtobeat;
 
 import static io.collect.services.games.howlongtobeat.HowLongToBeatUtil.parseTime;
+import static io.collect.services.games.howlongtobeat.HowLongToBeatUtil.parseTypeAndSet;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -58,19 +59,7 @@ public class HowLongToBeatDetailPage {
 										.text();
 						double time = parseTime(li	.getElementsByTag("div")
 													.text());
-						if ("Main Story".equalsIgnoreCase(type)) {
-							entry.setMainStory(time);
-						} else if ("Main + Extras".equals(type)) {
-							entry.setMainAndExtra(time);
-						} else if ("Completionist".equals(type)) {
-							entry.setCompletionist(time);
-						} else if ("Single-Player".equals(type)) {
-							entry.setSinglePlayer(time);
-						} else if ("Co-Op".equals(type)) {
-							entry.setCoop(time);
-						} else if ("Vs.".equals(type)) {
-							entry.setVs(time);
-						}
+						parseTypeAndSet(entry, type, time);
 					});
 		entry.setImageSource(page	.select(".game_image > img")
 									.get(0)

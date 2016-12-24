@@ -7,6 +7,31 @@ package io.collect.services.games.howlongtobeat;
  *
  */
 public class HowLongToBeatUtil {
+	
+	
+	/**
+	 * Parses the text as type (Main Story, Vs., Coop., ...) and sets the corresponding attribute in given HowLongToBeatEntry
+	 * @param entry
+	 * @param type
+	 * @param time
+	 * @return
+	 */
+	public static HowLongToBeatEntry parseTypeAndSet(HowLongToBeatEntry entry, String type, double time){
+		if (type.startsWith("Main Story")) {
+			entry.setMainStory(time);
+		} else if (type.startsWith("Main + Extra")) {
+			entry.setMainAndExtra(time);
+		} else if (type.startsWith("Completionist")) {
+			entry.setCompletionist(time);
+		} else if (type.startsWith("Single-Player")) {
+			entry.setSinglePlayer(time);
+		} else if (type.startsWith("Co-Op")) {
+			entry.setCoop(time);
+		} else if (type.startsWith("Vs.")) {
+			entry.setVs(time);
+		}
+		return entry;
+	}
 
 	/**
 	 * Utility method used for parsing a given input text (like

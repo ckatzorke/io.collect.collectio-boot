@@ -108,6 +108,32 @@ public class TestHowLongToBeatSearchResult {
 		assertEquals("40171", entry.getGameId());
 
 	}
+	
+	@Test
+	public void searchOverwatch() throws Exception {
+		final String searchterm = "overwatch";
+		String fragment = loadFragment("search_overwatch.html");
+		HowLongToBeatSearchResultPage result = new HowLongToBeatSearchResultPage(searchterm, fragment);
+		assertEquals(1, result.getResultCount());
+		assertEquals(1, result	.getEntries()
+								.size());
+
+		HowLongToBeatEntry entry = result	.getEntries()
+											.stream()
+											.findFirst()
+											.get();
+		//only Vs.
+		assertEquals(0, entry.getMainStory(), 0);
+		assertEquals(0, entry.getCompletionist(), 0);
+		assertEquals(49.0, entry.getVs(), 0);
+
+		assertEquals(
+				"http://www.howlongtobeat.com/gameimages/31590_Overwatch.jpg",
+				entry.getImageSource());
+		assertEquals("http://www.howlongtobeat.com/game.php?id=31590", entry.getDetailLink());
+		assertEquals("31590", entry.getGameId());
+
+	}
 
 	private String loadFragment(String filename) throws UnsupportedEncodingException, IOException {
 		return new String(Files.readAllBytes(FileSystems.getDefault()
