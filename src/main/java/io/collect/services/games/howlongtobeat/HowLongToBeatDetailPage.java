@@ -6,7 +6,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 /**
- * Encapsulates the detailpage. Uses the html used by the webite <a href="http://howlongtobeat.com">Howlongtobeat</a> to represent a single game entry and parses the relevant information.
+ * Encapsulates the detailpage. Uses the html used by the webite
+ * <a href="http://howlongtobeat.com">Howlongtobeat</a> to represent a single
+ * game entry and parses the relevant information.
+ * 
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
@@ -15,25 +18,32 @@ public class HowLongToBeatDetailPage {
 	private final String html;
 	private final HowLongToBeatEntry entry;
 
-  /**
-   * Constructs the object
-   * @param html the markup from <a href="http://howlongtobeat.com">Howlongtobeat</a>
-   * @param detailUrl the link to this resource from <a href="http://howlongtobeat.com">Howlongtobeat</a>
-   * @param gameId the id used by <a href="http://howlongtobeat.com">Howlongtobeat</a>
-   */
+	/**
+	 * Constructs the object
+	 * 
+	 * @param html
+	 *            the markup from
+	 *            <a href="http://howlongtobeat.com">Howlongtobeat</a>
+	 * @param detailUrl
+	 *            the link to this resource from
+	 *            <a href="http://howlongtobeat.com">Howlongtobeat</a>
+	 * @param gameId
+	 *            the id used by
+	 *            <a href="http://howlongtobeat.com">Howlongtobeat</a>
+	 */
 	public HowLongToBeatDetailPage(String html, String detailUrl, String gameId) {
 		this.html = html;
 		this.entry = analyzeDetailPage(detailUrl, gameId);
 	}
 
-  /**
-   * @return the parsed entry
-   */
+	/**
+	 * @return the parsed entry
+	 */
 	public HowLongToBeatEntry getEntry() {
 		return this.entry;
 	}
 
-  private HowLongToBeatEntry analyzeDetailPage(String detailUrl, String gameId) {
+	private HowLongToBeatEntry analyzeDetailPage(String detailUrl, String gameId) {
 		final HowLongToBeatEntry entry = new HowLongToBeatEntry();
 		Document page = Jsoup.parse(this.html);
 		Elements title = page.getElementsByClass("profile_header");
@@ -54,6 +64,12 @@ public class HowLongToBeatDetailPage {
 							entry.setMainAndExtra(time);
 						} else if ("Completionist".equals(type)) {
 							entry.setCompletionist(time);
+						} else if ("Single-Player".equals(type)) {
+							entry.setSinglePlayer(time);
+						} else if ("Co-Op".equals(type)) {
+							entry.setCoop(time);
+						} else if ("Vs.".equals(type)) {
+							entry.setVs(time);
 						}
 					});
 		entry.setImageSource(page	.select(".game_image > img")

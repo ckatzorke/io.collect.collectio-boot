@@ -63,6 +63,37 @@ public class TestHowLongToBeatDetailPage {
 		assertEquals(7.5, entry.getMainAndExtra(), 0);
 		assertEquals(11.5, entry.getCompletionist(), 0);
 	}
+	
+	@Test
+	public void parseDetailBattlefront() throws Exception {
+		HowLongToBeatDetailPage page = new HowLongToBeatDetailPage(loadDetail("29358"),
+				"http://howlongtobeat.com/game.php?id=29358", "29358");
+		HowLongToBeatEntry entry = page.getEntry();
+
+		assertNotNull(entry);
+		assertEquals("29358", entry.getGameId());
+		assertEquals("http://howlongtobeat.com/game.php?id=29358", entry.getDetailLink());
+		assertEquals("Star Wars: Battlefront (2015)", entry.getName());
+		assertEquals(0, entry.getMainStory(), 0);
+		assertEquals(17.0, entry.getSinglePlayer(), 0);
+		assertEquals(34.0, entry.getCoop(), 0);
+		assertEquals(32.0, entry.getVs(), 0);
+	}
+	
+	@Test
+	public void parseDetailOverwatch() throws Exception {
+		HowLongToBeatDetailPage page = new HowLongToBeatDetailPage(loadDetail("31590"),
+				"http://howlongtobeat.com/game.php?id=31590", "31590");
+		HowLongToBeatEntry entry = page.getEntry();
+
+		assertNotNull(entry);
+		assertEquals("31590", entry.getGameId());
+		assertEquals("http://howlongtobeat.com/game.php?id=31590", entry.getDetailLink());
+		assertEquals("Overwatch", entry.getName());
+		assertEquals(0, entry.getMainStory(), 0);
+		assertEquals(0.0, entry.getCoop(), 0);
+		assertEquals(49.0, entry.getVs(), 0);
+	}
 
 	private String loadDetail(String gameId) throws UnsupportedEncodingException, IOException {
 		return new String(Files.readAllBytes(FileSystems.getDefault()

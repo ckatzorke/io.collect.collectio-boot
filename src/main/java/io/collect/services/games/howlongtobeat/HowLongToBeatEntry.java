@@ -6,6 +6,10 @@ package io.collect.services.games.howlongtobeat;
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
+/**
+ * @author Christian Katzorke ckatzorke@gmail.com
+ *
+ */
 public class HowLongToBeatEntry {
 
 	private String name;
@@ -15,6 +19,9 @@ public class HowLongToBeatEntry {
 	private double mainStory;
 	private double mainAndExtra;
 	private double completionist;
+	private double singlePlayer;
+	private double vs;
+	private double coop;
 
 	/**
 	 * @return the name of the game
@@ -102,6 +109,49 @@ public class HowLongToBeatEntry {
 	public void setCompletionist(double completionist) {
 		this.completionist = completionist;
 	}
+	
+
+	/**
+	 * @return the singlePlayer
+	 */
+	public double getSinglePlayer() {
+		return singlePlayer;
+	}
+
+	/**
+	 * @param singlePlayer the singlePlayer to set
+	 */
+	public void setSinglePlayer(double singlePlayer) {
+		this.singlePlayer = singlePlayer;
+	}
+
+	/**
+	 * @return the vs
+	 */
+	public double getVs() {
+		return vs;
+	}
+
+	/**
+	 * @param vs the vs to set
+	 */
+	public void setVs(double vs) {
+		this.vs = vs;
+	}
+
+	/**
+	 * @return the coop
+	 */
+	public double getCoop() {
+		return coop;
+	}
+
+	/**
+	 * @param coop the coop to set
+	 */
+	public void setCoop(double coop) {
+		this.coop = coop;
+	}
 
 	/**
 	 * @return the gameId
@@ -118,16 +168,16 @@ public class HowLongToBeatEntry {
 		this.gameId = gameId;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "HowLongToBeatEntry [name=" + name + ", detailLink=" + detailLink + ", gameId=" + gameId
 				+ ", imageSource=" + imageSource + ", mainStory=" + mainStory + ", mainAndExtra=" + mainAndExtra
-				+ ", completionist=" + completionist + "]";
+				+ ", completionist=" + completionist + ", singlePlayer=" + singlePlayer + ", vs=" + vs + ", coop="
+				+ coop + "]";
 	}
+
 
 }
