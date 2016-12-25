@@ -17,14 +17,12 @@ public class HowLongToBeatUtil {
 	 * @return
 	 */
 	public static HowLongToBeatEntry parseTypeAndSet(HowLongToBeatEntry entry, String type, double time){
-		if (type.startsWith("Main Story")) {
+		if (type.startsWith("Main Story") || type.startsWith("Single-Player") ||type.startsWith("Solo")) {
 			entry.setMainStory(time);
 		} else if (type.startsWith("Main + Extra")) {
 			entry.setMainAndExtra(time);
 		} else if (type.startsWith("Completionist")) {
 			entry.setCompletionist(time);
-		} else if (type.startsWith("Single-Player")) {
-			entry.setSinglePlayer(time);
 		} else if (type.startsWith("Co-Op")) {
 			entry.setCoop(time);
 		} else if (type.startsWith("Vs.")) {

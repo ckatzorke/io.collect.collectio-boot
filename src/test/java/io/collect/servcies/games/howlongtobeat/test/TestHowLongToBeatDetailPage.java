@@ -74,8 +74,7 @@ public class TestHowLongToBeatDetailPage {
 		assertEquals("29358", entry.getGameId());
 		assertEquals("http://howlongtobeat.com/game.php?id=29358", entry.getDetailLink());
 		assertEquals("Star Wars: Battlefront (2015)", entry.getName());
-		assertEquals(0, entry.getMainStory(), 0);
-		assertEquals(17.0, entry.getSinglePlayer(), 0);
+		assertEquals(17.0, entry.getMainStory(), 0);
 		assertEquals(34.0, entry.getCoop(), 0);
 		assertEquals(32.0, entry.getVs(), 0);
 	}
@@ -101,7 +100,7 @@ public class TestHowLongToBeatDetailPage {
 				"http://howlongtobeat.com/game.php?id=24166", "24166");
 		HowLongToBeatEntry entry = page.getEntry();
 
-		assertEquals(148, entry.getSinglePlayer(), 0);
+		assertEquals(148, entry.getMainStory(), 0);
 		assertEquals(0.0, entry.getCoop(), 0);
 		assertEquals(0.0, entry.getVs(), 0);
 	}

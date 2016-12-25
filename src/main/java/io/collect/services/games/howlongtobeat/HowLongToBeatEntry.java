@@ -10,6 +10,10 @@ package io.collect.services.games.howlongtobeat;
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
+/**
+ * @author Christian Katzorke ckatzorke@gmail.com
+ *
+ */
 public class HowLongToBeatEntry {
 
 	private String name;
@@ -19,7 +23,6 @@ public class HowLongToBeatEntry {
 	private double mainStory;
 	private double mainAndExtra;
 	private double completionist;
-	private double singlePlayer;
 	private double vs;
 	private double coop;
 
@@ -111,19 +114,6 @@ public class HowLongToBeatEntry {
 	}
 	
 
-	/**
-	 * @return the singlePlayer
-	 */
-	public double getSinglePlayer() {
-		return singlePlayer;
-	}
-
-	/**
-	 * @param singlePlayer the singlePlayer to set
-	 */
-	public void setSinglePlayer(double singlePlayer) {
-		this.singlePlayer = singlePlayer;
-	}
 
 	/**
 	 * @return the vs
@@ -168,16 +158,13 @@ public class HowLongToBeatEntry {
 		this.gameId = gameId;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "HowLongToBeatEntry [name=" + name + ", detailLink=" + detailLink + ", gameId=" + gameId
 				+ ", imageSource=" + imageSource + ", mainStory=" + mainStory + ", mainAndExtra=" + mainAndExtra
-				+ ", completionist=" + completionist + ", singlePlayer=" + singlePlayer + ", vs=" + vs + ", coop="
-				+ coop + "]";
+				+ ", completionist=" + completionist + ", vs=" + vs + ", coop=" + coop + "]";
 	}
+
 
 
 }
