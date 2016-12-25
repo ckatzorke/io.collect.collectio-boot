@@ -95,6 +95,17 @@ public class TestHowLongToBeatDetailPage {
 		assertEquals(49.0, entry.getVs(), 0);
 	}
 
+	@Test
+	public void parseDetailBorderlandsHandsomeColl() throws Exception {
+		HowLongToBeatDetailPage page = new HowLongToBeatDetailPage(loadDetail("24166"),
+				"http://howlongtobeat.com/game.php?id=24166", "24166");
+		HowLongToBeatEntry entry = page.getEntry();
+
+		assertEquals(148, entry.getSinglePlayer(), 0);
+		assertEquals(0.0, entry.getCoop(), 0);
+		assertEquals(0.0, entry.getVs(), 0);
+	}
+
 	private String loadDetail(String gameId) throws UnsupportedEncodingException, IOException {
 		return new String(Files.readAllBytes(FileSystems.getDefault()
 														.getPath("src/test/resources/howlongtobeat",
