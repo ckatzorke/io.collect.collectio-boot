@@ -1,24 +1,23 @@
-/*
- * Copyright (C) Christian Katzorke <ckatzorke@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.collect.model.games;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-public enum Platform {
-	PS, PS2, PS3, PS4, PSP, PSVITA, XBOX, XBOX360, XBOXONE, N3DS, DS, GAMEBOY, NES, SNES, N64, GAMECUBE, WII, WIIU, PC, STEAM, NEOGEO, SATURN, MEGADRIVE, DREAMCAST;
+public class Platform {
+
+	private String uid;
+	private String name;
+	private String abbrev;
+	private LocalDate addDate;
+	private LocalDateTime updateDate;
+	
+	private String gbId;
+	private String gbDeck;
+	private String gbThumbUrl;
+	private String gbSuperUrl;
+	
 }

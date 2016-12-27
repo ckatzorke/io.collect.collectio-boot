@@ -7,4 +7,4 @@ giantbomb:
 
 
 
-spring.boot.admin.url: http://localhost:8081
+#spring.boot.admin.url: http://localhost:8081
