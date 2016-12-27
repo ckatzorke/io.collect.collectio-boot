@@ -25,8 +25,8 @@ import java.nio.file.Files;
 
 import org.junit.Test;
 
-import io.collect.services.games.howlongtobeat.HowLongToBeatDetailPage;
-import io.collect.services.games.howlongtobeat.HowLongToBeatEntry;
+import io.collect.games.services.howlongtobeat.HowLongToBeatDetailPage;
+import io.collect.games.services.howlongtobeat.HowLongToBeatEntry;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com

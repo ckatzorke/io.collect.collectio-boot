@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 
 import org.junit.Test;
 
-import io.collect.services.games.howlongtobeat.HowLongToBeatEntry;
-import io.collect.services.games.howlongtobeat.HowLongToBeatSearchResultPage;
+import io.collect.games.services.howlongtobeat.HowLongToBeatEntry;
+import io.collect.games.services.howlongtobeat.HowLongToBeatSearchResultPage;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com

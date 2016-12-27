@@ -27,9 +27,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestTemplate;
 
 import io.collect.CollectioApplication;
-import io.collect.services.games.giantbomb.config.GiantBombProperties;
-import io.collect.services.games.howlongtobeat.HowLongToBeatSearchResultPage;
-import io.collect.services.games.howlongtobeat.HowLongToBeatService;
+import io.collect.games.services.giantbomb.config.GiantBombProperties;
+import io.collect.games.services.howlongtobeat.HowLongToBeatSearchResultPage;
+import io.collect.games.services.howlongtobeat.HowLongToBeatService;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
