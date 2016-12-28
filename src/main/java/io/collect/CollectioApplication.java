@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "io.collect.config", "io.collect.rest.games", "io.collect.services.games.giantbomb",
-		"io.collect.services.games.howlongtobeat" })
+@ComponentScan(basePackages = { "io.collect.config", "io.collect.games.rest", "io.collect.games.services",
+		"io.collect.games.repository", "io.collect.games.jobs" })
 public class CollectioApplication {
 
 	public static void main(String[] args) {

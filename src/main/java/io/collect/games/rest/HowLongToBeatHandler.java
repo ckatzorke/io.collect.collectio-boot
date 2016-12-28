@@ -52,7 +52,8 @@ public class HowLongToBeatHandler {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public Result<HowLongToBeatSearchResultPage> howLongToBeat(@RequestParam String game, HttpServletRequest request) {
 		Result<HowLongToBeatSearchResultPage> result = new Result<>(this.howLongToBeatService.search(game));
-		result.add(new Link(request.getRequestURI()));
+		result.add(new Link(request.getRequestURI())); //TODO QueryString 
+		//TODO example?
 		return result;
 	}
 
@@ -75,7 +76,7 @@ public class HowLongToBeatHandler {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public Result<HowLongToBeatEntry> howLongToBeatDetails(@RequestParam String gameId, HttpServletRequest request) {
 		Result<HowLongToBeatEntry> result = new Result<>(this.howLongToBeatService.detail(gameId));
-		result.add(new Link(request.getRequestURI()));
+		result.add(new Link(request.getRequestURI())); //TODO QS
 		return result;
 	}
 
