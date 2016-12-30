@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import io.collect.games.model.Job;
@@ -25,9 +26,9 @@ import io.collect.games.services.giantbomb.resources.GiantBombPlatform;
  *
  */
 @Component
-public class PlatformImportJob {
+public class PlatformImportJobProcessor {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PlatformImportJob.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PlatformImportJobProcessor.class);
 	private static final GiantBombSort SORT_BY_UPDATE_DESC = new GiantBombSort("date_last_updated", false);
 	private static final String[] FIELDS = new String[] { "name", "deck", "abbreviation", "id", "image", "date_added",
 			"date_last_updated" };
@@ -40,17 +41,22 @@ public class PlatformImportJob {
 	/**
 	 * 
 	 */
-	public PlatformImportJob(JobRepository jobRepository, PlatformRepository platformRepository,
+	public PlatformImportJobProcessor(JobRepository jobRepository, PlatformRepository platformRepository,
 			GiantBombTemplate gbTemplate) {
 		this.jobRepository = jobRepository;
 		this.platformRepository = platformRepository;
 		this.gbTemplate = gbTemplate;
 	}
 
-	public Job importPlatforms() {
+	public Job createJob() {
 		Job job = new Job();
 		job.setJobType(JobType.IMPORT_PLATFORM);
 		job = jobRepository.save(job);
+		return job;
+	}
+
+	@Async("giantbombExecutor")
+	public void importPlatforms(Job job) {
 		try {
 			LOGGER.info("********************************");
 			LOGGER.info("Starting import of platforms...");
@@ -86,7 +92,7 @@ public class PlatformImportJob {
 						platformRepository.save(p);
 						counter++;
 					} else {
-						LOGGER.info("Latest update date reached. Rest already imported.");
+						LOGGER.info("Latest update date reached. All resources up to date.");
 						updateThresholdReached = true;
 						break;
 					}
@@ -97,9 +103,6 @@ public class PlatformImportJob {
 				}
 				offset += limit;
 			}
-			LOGGER.info("********************************");
-			LOGGER.info("FINISHED import of platforms...");
-			LOGGER.info("********************************");
 			job.setFinished(new Date());
 			job.setInfo("Imported/Updated " + counter + " entries.");
 		} catch (Exception e) {
@@ -108,8 +111,10 @@ public class PlatformImportJob {
 		} finally {
 			job.setJobStatus(JobStatus.FINISHED);
 			job = jobRepository.save(job);
+			LOGGER.info("********************************");
+			LOGGER.info("FINISHED import of platforms...");
+			LOGGER.info("********************************");
 		}
-		return job;
 	}
 
 	/**
