@@ -49,6 +49,14 @@ Follow the instructions for IDE integration.
 
 ## Available features
 
+### Jobs api (currenty only Platformimport)
+
+Overview GET /api/jobs
+
+Create new import job POST /api/jobs
+
+Detail /api/jobs/{id}
+
 ### Giantbomb API
 
 Search /rest/giantbomb/search?query=Dark+Souls
