@@ -7,6 +7,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import io.collect.games.model.Job;
@@ -48,11 +49,13 @@ public class PlatformImportJobProcessor {
 		this.gbTemplate = gbTemplate;
 	}
 
-	public Job createJob() {
+	@Scheduled(initialDelay = 10000, fixedDelay = 12 * 60 * 60 * 1000)
+	@Async("giantbombExecutor")
+	public void createJob() {
 		Job job = new Job();
 		job.setJobType(JobType.IMPORT_PLATFORM);
 		job = jobRepository.save(job);
-		return job;
+		importPlatforms(job);
 	}
 
 	@Async("giantbombExecutor")
@@ -63,8 +66,10 @@ public class PlatformImportJobProcessor {
 			LOGGER.info("********************************");
 			Platform latestUpdate = platformRepository.findTopByOrderByGbUpdateDateDesc();
 			LocalDateTime updateThreshold;
+			boolean initialImport = false;
 			if (latestUpdate == null) {
 				updateThreshold = LocalDateTime.MIN;
+				initialImport = true;
 				LOGGER.info("Initial import...");
 			} else {
 				updateThreshold = LocalDateTime.ofInstant(latestUpdate	.getGbUpdateDate()
@@ -88,6 +93,7 @@ public class PlatformImportJobProcessor {
 							ZoneId.systemDefault());
 					if (updated.isAfter(updateThreshold)) {
 						Platform p = convertToPlatform(platform);
+						handleUpdate(initialImport, p);
 						LOGGER.info("Adding platform: " + p);
 						platformRepository.save(p);
 						counter++;
@@ -103,17 +109,30 @@ public class PlatformImportJobProcessor {
 				}
 				offset += limit;
 			}
-			job.setFinished(new Date());
 			job.setInfo("Imported/Updated " + counter + " entries.");
+			job.setJobStatus(JobStatus.FINISHED);
 		} catch (Exception e) {
 			job.setJobStatus(JobStatus.STOPPED);
 			job.setInfo(e.getMessage());
 		} finally {
-			job.setJobStatus(JobStatus.FINISHED);
+			job.setFinished(new Date());
 			job = jobRepository.save(job);
 			LOGGER.info("********************************");
 			LOGGER.info("FINISHED import of platforms...");
 			LOGGER.info("********************************");
+		}
+	}
+
+	/**
+	 * @param initialImport
+	 * @param p
+	 */
+	private void handleUpdate(boolean initialImport, Platform p) {
+		if (!initialImport) {
+			Platform existing = platformRepository.findByGbId(p.getGbId());
+			if (existing != null) {
+				p.setGbId(existing.getUid());
+			}
 		}
 	}
 

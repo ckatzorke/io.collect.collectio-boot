@@ -10,10 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.collect.games.jobs.PlatformImportJobProcessor;
 import io.collect.games.model.Job;
 import io.collect.games.repository.JobRepository;
 import io.collect.games.rest.GamesControllerAdvice;
@@ -28,12 +26,10 @@ import io.collect.games.rest.ResultResponseEntity;
 public class JobHandler {
 
 	private JobRepository jobRepository;
-	private PlatformImportJobProcessor platformImporter;
 
 	@Autowired
-	public JobHandler(JobRepository jobRepository, PlatformImportJobProcessor platformImporter) {
+	public JobHandler(JobRepository jobRepository) {
 		this.jobRepository = jobRepository;
-		this.platformImporter = platformImporter;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
@@ -53,17 +49,6 @@ public class JobHandler {
 		}
 		ResultResponseEntity<Job> result = new ResultResponseEntity<>(job);
 		result.add(new Link(request.getRequestURI()));
-		return result;
-	}
-
-	@RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	@ResponseStatus(value = HttpStatus.CREATED)
-	public ResultResponseEntity<Job> createJob(HttpServletRequest request) {
-		Job job = platformImporter.createJob();
-		platformImporter.importPlatforms(job); // async
-		ResultResponseEntity<Job> result = new ResultResponseEntity<>(job);
-		result.add(new Link(request.getRequestURI()));
-		result.add(new Link(request.getRequestURI() + "/" + job.getId(), "detail"));
 		return result;
 	}
 
