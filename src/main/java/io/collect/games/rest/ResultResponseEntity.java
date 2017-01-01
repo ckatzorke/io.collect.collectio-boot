@@ -10,12 +10,12 @@ import org.springframework.hateoas.ResourceSupport;
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-public class Result<T> extends ResourceSupport implements Serializable {
+public class ResultResponseEntity<T> extends ResourceSupport implements Serializable {
 	private static final long serialVersionUID = 2569196901438096359L;
 
 	private final T result;
 
-	public Result(T result) {
+	public ResultResponseEntity(T result) {
 		this.result = result;
 	}
 	

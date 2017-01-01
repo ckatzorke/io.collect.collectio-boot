@@ -1,4 +1,4 @@
-package io.collect.games.rest;
+package io.collect.games.rest.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
+import io.collect.games.rest.ResultResponseEntity;
 import io.collect.games.services.howlongtobeat.HowLongToBeatEntry;
 import io.collect.games.services.howlongtobeat.HowLongToBeatSearchResultPage;
 import io.collect.games.services.howlongtobeat.HowLongToBeatService;
@@ -19,7 +20,7 @@ import io.collect.games.services.howlongtobeat.HowLongToBeatService;
 /**
  * {@link RestController} for handling request for the
  * {@link HowLongToBeatService}. Requests to this controllers' endpoint are
- * returning a generic {@link Result} object as json, containing a
+ * returning a generic {@link ResultResponseEntity} object as json, containing a
  * <b>>result</b> property
  * 
  * @author Christian Katzorke ckatzorke@gmail.com
@@ -50,8 +51,8 @@ public class HowLongToBeatHandler {
 	@Timed
 	@RequestMapping(value = "/rest/howlongtobeat", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public Result<HowLongToBeatSearchResultPage> howLongToBeat(@RequestParam String game, HttpServletRequest request) {
-		Result<HowLongToBeatSearchResultPage> result = new Result<>(this.howLongToBeatService.search(game));
+	public ResultResponseEntity<HowLongToBeatSearchResultPage> howLongToBeat(@RequestParam String game, HttpServletRequest request) {
+		ResultResponseEntity<HowLongToBeatSearchResultPage> result = new ResultResponseEntity<>(this.howLongToBeatService.search(game));
 		result.add(new Link(request.getRequestURI() + "?" + request.getQueryString()));
 		// TODO example?
 		return result;
@@ -74,8 +75,8 @@ public class HowLongToBeatHandler {
 	@Timed
 	@RequestMapping(value = "/rest/howlongtobeatdetail", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public Result<HowLongToBeatEntry> howLongToBeatDetails(@RequestParam String gameId, HttpServletRequest request) {
-		Result<HowLongToBeatEntry> result = new Result<>(this.howLongToBeatService.detail(gameId));
+	public ResultResponseEntity<HowLongToBeatEntry> howLongToBeatDetails(@RequestParam String gameId, HttpServletRequest request) {
+		ResultResponseEntity<HowLongToBeatEntry> result = new ResultResponseEntity<>(this.howLongToBeatService.detail(gameId));
 		result.add(new Link(request.getRequestURI() + "?" + request.getQueryString()));
 		return result;
 	}

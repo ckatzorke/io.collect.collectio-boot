@@ -1,7 +1,8 @@
-package io.collect.games.rest;
+package io.collect.games.rest.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.collect.games.jobs.PlatformImportJobProcessor;
 import io.collect.games.model.Job;
 import io.collect.games.repository.JobRepository;
+import io.collect.games.rest.GamesControllerAdvice;
+import io.collect.games.rest.ResultResponseEntity;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
@@ -34,26 +37,31 @@ public class JobHandler {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public Result<Iterable<Job>> getJobs(HttpServletRequest request) {
-		Result<Iterable<Job>> result = new Result<>(jobRepository.findAll());
+	public ResultResponseEntity<Iterable<Job>> getJobs(HttpServletRequest request) {
+		ResultResponseEntity<Iterable<Job>> result = new ResultResponseEntity<>(jobRepository.findAll());
 		result.add(new Link(request.getRequestURI()));
 		return result;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public Result<Job> getJobById(HttpServletRequest request, @PathVariable Long id) {
-		Result<Job> result = new Result<>(jobRepository.findOne(id));
-		//TODO not found, controlleradvice
+	public ResultResponseEntity<Job> getJobById(HttpServletRequest request, @PathVariable Long id) {
+		Job job = jobRepository.findOne(id);
+		if (job == null) {
+			ContextedRuntimeException exception = new ContextedRuntimeException("No job with id='" + id + "' found.");
+			exception.addContextValue(GamesControllerAdvice.CONTEXT_HTTP_STATUS, HttpStatus.NOT_FOUND);
+			throw exception;
+		}
+		ResultResponseEntity<Job> result = new ResultResponseEntity<>(job);
 		result.add(new Link(request.getRequestURI()));
 		return result;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Result<Job> createJob(HttpServletRequest request) {
+	public ResultResponseEntity<Job> createJob(HttpServletRequest request) {
 		Job job = platformImporter.createJob();
 		platformImporter.importPlatforms(job); // async
-		Result<Job> result = new Result<>(job);
+		ResultResponseEntity<Job> result = new ResultResponseEntity<>(job);
 		result.add(new Link(request.getRequestURI()));
 		result.add(new Link(request.getRequestURI() + "/" + job.getId(), "detail"));
 		return result;
