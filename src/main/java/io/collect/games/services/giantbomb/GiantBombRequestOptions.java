@@ -75,4 +75,13 @@ public class GiantBombRequestOptions {
 		this.filter = filter;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "GiantBombRequestOptions [fieldList=" + fieldList + ", limit=" + limit + ", offset=" + offset + ", sort="
+				+ sort + ", filter=" + filter + "]";
+	}
+
 }

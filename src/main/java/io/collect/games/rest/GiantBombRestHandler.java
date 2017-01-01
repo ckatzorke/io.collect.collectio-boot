@@ -43,7 +43,7 @@ public class GiantBombRestHandler {
 	public Result<GiantBombMultiResourceResponse<GiantBombGame>> search(@RequestParam String query,
 			HttpServletRequest request) {
 		Result<GiantBombMultiResourceResponse<GiantBombGame>> result = new Result<>(gbTemplate.searchForGame(query));
-		result.add(new Link(request.getRequestURI()));
+		result.add(new Link(request.getRequestURI())); // TODO QS
 		return result;
 	}
 
@@ -57,7 +57,7 @@ public class GiantBombRestHandler {
 			gameDetails = game.results;
 		}
 		Result<GiantBombGame> result = new Result<>(gameDetails);
-		result.add(new Link(request.getRequestURI()));
+		result.add(new Link(request.getRequestURI()));// TODO QS
 		return result;
 	}
 }

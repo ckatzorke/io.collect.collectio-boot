@@ -42,7 +42,20 @@ Spin up remote docker image
 	docker run -e "GIANTBOMB_API_KEY=<apikey>" -p 8080:8080 -t collectio/collectio-boot
 	
 
+## About Project Lombok
+
+This project uses [Lombok](https://projectlombok.org/index.html) to generate Java typical bloated getter/setter/toString/hashCode stuff for Java Beans.
+Follow the instructions for IDE integration.
+
 ## Available features
+
+### Jobs api (currenty only Platformimport)
+
+Overview GET /api/jobs
+
+Create new import job POST /api/jobs
+
+Detail /api/jobs/{id}
 
 ### Giantbomb API
 
