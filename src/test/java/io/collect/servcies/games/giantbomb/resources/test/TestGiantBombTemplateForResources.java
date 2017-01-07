@@ -100,7 +100,7 @@ public class TestGiantBombTemplateForResources {
 		GiantBombRequestOptions options = new GiantBombRequestOptions(10, 0,
 				null, null, "id", "name");
 		GiantBombMultiResourceResponse<GiantBombGame> games = gbTemplate
-				.getForGames(options);
+				.getForGames(options, null);
 		mockServer.verify();
 
 		// System.out.println(game);
@@ -124,7 +124,7 @@ public class TestGiantBombTemplateForResources {
 		GiantBombRequestOptions options = new GiantBombRequestOptions(10, 0,
 				new GiantBombSort("date_added", false), null, "id", "name");
 		GiantBombMultiResourceResponse<GiantBombGame> games = gbTemplate
-				.getForGames(options);
+				.getForGames(options, null);
 		mockServer.verify();
 
 		// System.out.println(game);

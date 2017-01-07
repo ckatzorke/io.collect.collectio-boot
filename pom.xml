@@ -72,7 +72,11 @@
 			<version>${spring-boot-admin.version}</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>io.javaslang</groupId>
+			<artifactId>javaslang</artifactId>
+			<version>2.1.0-alpha</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.mashape.unirest</groupId>

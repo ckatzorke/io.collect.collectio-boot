@@ -4,15 +4,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import lombok.Data;
+
 /**
  * Entity for owned games
  * 
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
+@Data
 public class Game {
 
-	private String uid;
+	private Long uid;
 	private int collectionNr;
 	private String upc;
 	private String name;

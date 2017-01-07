@@ -5,5 +5,5 @@ package io.collect.games.model;
  *
  */
 public enum JobType {
-	IMPORT_PLATFORM
+	IMPORT_PLATFORM, IMPORT_GAMEINDEX
 }
