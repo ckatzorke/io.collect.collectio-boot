@@ -9,8 +9,17 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class HowLongToBeatUtil {
-	
-	public static double  calculateSearchHitPropability(String name, String searchTerm) {
+
+	/**
+	 * Calculates the similarity between to strings using Levenshtein in
+	 * comparison to the string length. The similarity is calculated as double,
+	 * 2 decimal digits, so it will result in a clean percentage.
+	 * 
+	 * @param name
+	 * @param searchTerm
+	 * @return
+	 */
+	public static double calculateSearchHitPropability(String name, String searchTerm) {
 		String longer = name.toLowerCase(), shorter = searchTerm.toLowerCase();
 		if (longer.length() < shorter.length()) { // longer should always have
 													// greater length
@@ -21,19 +30,22 @@ public class HowLongToBeatUtil {
 		if (longerLength == 0) {
 			return 1.0;
 		}
-		return (longerLength - StringUtils.getLevenshteinDistance(longer, shorter)) / (double) longerLength;
+		return ((double) Math.round(
+				((longerLength - StringUtils.getLevenshteinDistance(longer, shorter)) / (double) longerLength) * 100)
+				/ 100);
 	}
-	
-	
+
 	/**
-	 * Parses the text as type (Main Story, Vs., Coop., ...) and sets the corresponding attribute in given HowLongToBeatEntry
+	 * Parses the text as type (Main Story, Vs., Coop., ...) and sets the
+	 * corresponding attribute in given HowLongToBeatEntry
+	 * 
 	 * @param entry
 	 * @param type
 	 * @param time
 	 * @return
 	 */
-	public static HowLongToBeatEntry parseTypeAndSet(HowLongToBeatEntry entry, String type, double time){
-		if (type.startsWith("Main Story") || type.startsWith("Single-Player") ||type.startsWith("Solo")) {
+	public static HowLongToBeatEntry parseTypeAndSet(HowLongToBeatEntry entry, String type, double time) {
+		if (type.startsWith("Main Story") || type.startsWith("Single-Player") || type.startsWith("Solo")) {
 			entry.setMainStory(time);
 		} else if (type.startsWith("Main + Extra")) {
 			entry.setMainAndExtra(time);
@@ -68,7 +80,8 @@ public class HowLongToBeatUtil {
 	}
 
 	/**
-	 * @param text like '5 Hours - 12 Hours' or '2½ Hours - 33½ Hours'
+	 * @param text
+	 *            like '5 Hours - 12 Hours' or '2½ Hours - 33½ Hours'
 	 * @return
 	 */
 	private static double handleRange(String text) {
@@ -78,7 +91,8 @@ public class HowLongToBeatUtil {
 	}
 
 	/**
-	 * @param text, can be '12 Hours' or '5½ Hours'
+	 * @param text,
+	 *            can be '12 Hours' or '5½ Hours'
 	 * @return
 	 */
 	private static double getTime(String text) {

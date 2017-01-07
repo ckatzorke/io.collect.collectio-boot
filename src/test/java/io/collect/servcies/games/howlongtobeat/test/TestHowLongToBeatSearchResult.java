@@ -72,16 +72,17 @@ public class TestHowLongToBeatSearchResult {
 		assertTrue(names.contains("The Witcher 3: Wild Hunt - Hearts of Stone"));
 		assertTrue(names.contains("Witcher 3: Wild Hunt - Game of the Year Edition"));
 
-		HowLongToBeatEntry entry = result	.getEntries()
-											.stream()
-											.filter(e -> e	.getName()
-															.equals("The Witcher 3: Wild Hunt"))
-											.findFirst()
-											.get();
+		HowLongToBeatSearchResultEntry entry = result	.getEntries()
+														.stream()
+														.filter(e -> e	.getName()
+																		.equals("The Witcher 3: Wild Hunt"))
+														.findFirst()
+														.get();
 
 		assertEquals(46.5, entry.getMainStory(), 0);
 		assertEquals(99.5, entry.getMainAndExtra(), 0);
 		assertEquals(165, entry.getCompletionist(), 0);
+		assertEquals(0.38, entry.getPropability(), 0);
 
 	}
 
