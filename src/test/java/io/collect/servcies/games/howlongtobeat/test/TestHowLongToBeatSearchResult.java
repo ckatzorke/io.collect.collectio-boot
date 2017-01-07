@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 
 import io.collect.games.services.howlongtobeat.HowLongToBeatEntry;
+import io.collect.games.services.howlongtobeat.HowLongToBeatSearchResultEntry;
 import io.collect.games.services.howlongtobeat.HowLongToBeatSearchResultPage;
 
 /**
@@ -86,20 +87,21 @@ public class TestHowLongToBeatSearchResult {
 
 	@Test
 	public void singleresult() throws Exception {
-		final String searchterm = "witcher 3: Wild hunt - game of the Year";
+		final String searchterm = "Witcher 3: Wild Hunt - game of the Year Edition";
 		String fragment = loadFragment("single.html");
 		HowLongToBeatSearchResultPage result = new HowLongToBeatSearchResultPage(searchterm, fragment);
 		assertEquals(1, result.getResultCount());
 		assertEquals(1, result	.getEntries()
 								.size());
 
-		HowLongToBeatEntry entry = result	.getEntries()
-											.stream()
-											.findFirst()
-											.get();
+		HowLongToBeatSearchResultEntry entry = result	.getEntries()
+														.stream()
+														.findFirst()
+														.get();
 
 		assertEquals(55.5, entry.getMainStory(), 0);
 		assertEquals(0, entry.getCompletionist(), 0);
+		assertEquals(1.0, entry.getPropability(), 0);
 
 		assertEquals(
 				"http://www.howlongtobeat.com/gameimages/1472548261_main_The_Witcher_3_Game_of_the_Year_Edition.jpg",
@@ -108,7 +110,7 @@ public class TestHowLongToBeatSearchResult {
 		assertEquals("40171", entry.getGameId());
 
 	}
-	
+
 	@Test
 	public void searchOverwatch() throws Exception {
 		final String searchterm = "overwatch";
@@ -122,14 +124,12 @@ public class TestHowLongToBeatSearchResult {
 											.stream()
 											.findFirst()
 											.get();
-		//only Vs.
+		// only Vs.
 		assertEquals(0, entry.getMainStory(), 0);
 		assertEquals(0, entry.getCompletionist(), 0);
 		assertEquals(49.0, entry.getVs(), 0);
 
-		assertEquals(
-				"http://www.howlongtobeat.com/gameimages/31590_Overwatch.jpg",
-				entry.getImageSource());
+		assertEquals("http://www.howlongtobeat.com/gameimages/31590_Overwatch.jpg", entry.getImageSource());
 		assertEquals("http://www.howlongtobeat.com/game.php?id=31590", entry.getDetailLink());
 		assertEquals("31590", entry.getGameId());
 

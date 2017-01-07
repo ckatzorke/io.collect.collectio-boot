@@ -1,5 +1,6 @@
 package io.collect.games.services.howlongtobeat;
 
+import static io.collect.games.services.howlongtobeat.HowLongToBeatUtil.calculateSearchHitPropability;
 import static io.collect.games.services.howlongtobeat.HowLongToBeatUtil.parseTime;
 import static io.collect.games.services.howlongtobeat.HowLongToBeatUtil.parseTypeAndSet;
 
@@ -28,7 +29,7 @@ public class HowLongToBeatSearchResultPage {
 	private final String htmlFragment;
 	private final String searchTerm;
 	private int resultCount = -1;
-	private List<HowLongToBeatEntry> entries;
+	private List<HowLongToBeatSearchResultEntry> entries;
 
 	public HowLongToBeatSearchResultPage(String term, String fragment) {
 		this.searchTerm = term;
@@ -63,7 +64,7 @@ public class HowLongToBeatSearchResultPage {
 	/**
 	 * @return the entries
 	 */
-	public List<HowLongToBeatEntry> getEntries() {
+	public List<HowLongToBeatSearchResultEntry> getEntries() {
 		if (entries == null) {
 			analyzeFragment();
 		}
@@ -82,16 +83,16 @@ public class HowLongToBeatSearchResultPage {
 	private void handleResult(Document html) {
 		Elements liElements = html.getElementsByTag("li");
 		this.resultCount = liElements.size();
-		Set<HowLongToBeatEntry> entrySet = liElements	.stream()
-														.map(this::handleHltbResultLi)
-														.collect(Collectors.toSet());
+		Set<HowLongToBeatSearchResultEntry> entrySet = liElements	.stream()
+																	.map(this::handleHltbResultLi)
+																	.collect(Collectors.toSet());
 		this.entries = new ArrayList<>(entrySet);
 	}
 
-	private HowLongToBeatEntry handleHltbResultLi(Element liElement) {
+	private HowLongToBeatSearchResultEntry handleHltbResultLi(Element liElement) {
 		Element gameTitle = liElement	.getElementsByTag("a")
 										.get(0);
-		HowLongToBeatEntry entry = new HowLongToBeatEntry();
+		HowLongToBeatSearchResultEntry entry = new HowLongToBeatSearchResultEntry();
 		entry.setName(gameTitle.attr("title"));
 		String href = HowLongToBeatService.HLTB_URL + gameTitle.attr("href");
 		entry.setDetailLink(href);
@@ -99,6 +100,7 @@ public class HowLongToBeatSearchResultPage {
 		entry.setImageSource(HowLongToBeatService.HLTB_URL + gameTitle	.getElementsByTag("img")
 																		.get(0)
 																		.attr("src"));
+		entry.setPropability(calculateSearchHitPropability(entry.getName(), searchTerm));
 		Elements times = liElement.getElementsByClass("search_list_details_block");
 		times	.get(0)
 				.children()

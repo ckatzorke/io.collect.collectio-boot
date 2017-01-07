@@ -1,5 +1,7 @@
 package io.collect.games.services.howlongtobeat;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Utility class
  * 
@@ -7,6 +9,20 @@ package io.collect.games.services.howlongtobeat;
  *
  */
 public class HowLongToBeatUtil {
+	
+	public static double  calculateSearchHitPropability(String name, String searchTerm) {
+		String longer = name.toLowerCase(), shorter = searchTerm.toLowerCase();
+		if (longer.length() < shorter.length()) { // longer should always have
+													// greater length
+			longer = searchTerm;
+			shorter = name;
+		}
+		int longerLength = longer.length();
+		if (longerLength == 0) {
+			return 1.0;
+		}
+		return (longerLength - StringUtils.getLevenshteinDistance(longer, shorter)) / (double) longerLength;
+	}
 	
 	
 	/**
