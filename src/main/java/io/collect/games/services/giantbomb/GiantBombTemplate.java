@@ -30,7 +30,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.codahale.metrics.annotation.Timed;
 
-import io.collect.games.model.Platform;
 import io.collect.games.services.giantbomb.config.GiantBombProperties;
 import io.collect.games.services.giantbomb.resources.GiantBombGame;
 import io.collect.games.services.giantbomb.resources.GiantBombMultiResourceResponse;
@@ -68,15 +67,14 @@ public class GiantBombTemplate {
 	 * @return
 	 */
 	@Timed
-	public GiantBombMultiResourceResponse<GiantBombGame> getForGames(GiantBombRequestOptions options, Platform p) {
+	public GiantBombMultiResourceResponse<GiantBombGame> getForGames(GiantBombRequestOptions options,
+			String platformId) {
 		ResponseEntity<GiantBombMultiResourceResponse<GiantBombGame>> responseEntity = restTemplate.exchange(
 				BASE_URI + "/games/?api_key={apikey}&format=json&limit={limit}&offset={offset}&field_list={field_list}&sort={sort}&filter={filter}&platforms={platforms}",
 				HttpMethod.GET, null, new ParameterizedTypeReference<GiantBombMultiResourceResponse<GiantBombGame>>() {
 				}, props.getApikey(), options.limit, options.offset, createFieldListParameter(options.fieldList),
 				options.sort == null ? "" : options.sort.toString(),
-				options.filter == null ? "" : options.filter.toString(), Option	.of(Option	.of(p)
-																							.getOrElse(new Platform())
-																							.getName())
+				options.filter == null ? "" : options.filter.toString(), Option	.of(platformId)
 																				.getOrElse(""));
 		GiantBombMultiResourceResponse<GiantBombGame> resources = responseEntity.getBody();
 		return resources;

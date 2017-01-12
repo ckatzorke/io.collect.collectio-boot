@@ -2,15 +2,17 @@ package io.collect.games.jobs;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import io.collect.games.model.GameIndex;
 import io.collect.games.model.Job;
@@ -25,6 +27,7 @@ import io.collect.games.services.giantbomb.GiantBombSort;
 import io.collect.games.services.giantbomb.GiantBombTemplate;
 import io.collect.games.services.giantbomb.resources.GiantBombGame;
 import io.collect.games.services.giantbomb.resources.GiantBombMultiResourceResponse;
+import io.collect.games.services.giantbomb.resources.GiantBombPlatform;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
@@ -44,6 +47,9 @@ public class GameIndexImportJobProcessor {
 	private GameIndexRepository gameIndexRepository;
 	private JobRepository jobRepository;
 
+	@Value("#{'${io.collect.import.platforms}'.split(',')}")
+	private List<String> platforms2Import;
+
 	/**
 	 * 
 	 */
@@ -55,7 +61,7 @@ public class GameIndexImportJobProcessor {
 		this.gbTemplate = gbTemplate;
 	}
 
-	//TODO get it running @Scheduled(initialDelay = 120000, fixedDelay = 12 * 60 * 60 * 1000)
+	@Scheduled(initialDelay = 30000, fixedDelay = 30000) // 12 * 60 * 60 * 1000)
 	@Async("giantbombExecutor")
 	public void createJob() {
 		Job job = new Job();
@@ -67,107 +73,120 @@ public class GameIndexImportJobProcessor {
 	@Async("giantbombExecutor")
 	public void importPlatforms(Job job) {
 		try {
-			Long platformId = 139l;
 			LOGGER.info("********************************");
-			LOGGER.info("Starting import of games for platform=" + platformId + "...");
+			LOGGER.info("Starting import of games");
 			LOGGER.info("********************************");
-			Platform p = platformRepository.findByGbId(platformId);
-			if (p == null) {
-				throw new IllegalArgumentException("No platform with id " + platformId + " found");
-			}
-			GameIndex gameIdxLatestUpdate = gameIndexRepository.findTopContainingPlatformByOrderByGbUpdateDateDesc(p); //gameIndexRepository.findTopContainingPlatformOrderByGbUpdateDateDesc(p);
-			LocalDateTime updateThreshold;
-			boolean initialImport = false;
-			if (gameIdxLatestUpdate == null) {
-				updateThreshold = LocalDateTime.MIN;
-				initialImport = true;
-				LOGGER.info("Initial import for platform " + p.getName() + "...");
-			} else {
-				updateThreshold = LocalDateTime.ofInstant(gameIdxLatestUpdate	.getGbUpdateDate()
-																				.toInstant(),
-						ZoneId.systemDefault());
-				LOGGER.info("Updating games for platform " + p.getName() + " after " + updateThreshold.toString());
-			}
-			job.setJobStatus(JobStatus.PROCESSING);
-			job = jobRepository.save(job);
-			int counter = 0;
-			int offset = 0;
-			int limit = 10;
-			boolean updateThresholdReached = false;
-			while (!updateThresholdReached) {
-				GiantBombRequestOptions options = new GiantBombRequestOptions(limit, offset, SORT_BY_UPDATE_DESC, null,
-						FIELDS);
-				LOGGER.info("Getting all platforms from www.giantbomb.com with {}", options);
-				GiantBombMultiResourceResponse<GiantBombGame> games = gbTemplate.getForGames(options, p);
-				for (GiantBombGame game : games.results) {
-					LocalDateTime updated = LocalDateTime.ofInstant(game.date_last_updated.toInstant(),
-							ZoneId.systemDefault());
-					if (updated.isAfter(updateThreshold)) {
-						GameIndex gameIdx = convertToGameIndex(game, p);
-						handleUpdate(initialImport, gameIdx, p);
-						LOGGER.info("Adding/Updateing game " + gameIdx);
-						gameIndexRepository.save(gameIdx);
-						counter++;
-					} else {
-						LOGGER.info("Latest update date reached. All resources up to date.");
-						updateThresholdReached = true;
-						break;
+			List<Platform> platforms4Import = findPlatforms4Import();
+			for (Platform p : platforms4Import) {
+				LOGGER.info("Starting import of games for platform {}", p);
+				LocalDateTime updateThreshold;
+				Date lastGameImport = p.getLastGamesImport();
+				if (lastGameImport == null) {
+					updateThreshold = LocalDateTime.MIN;
+					LOGGER.info("Initial import of games for platform " + p.getName() + "...");
+				} else {
+					updateThreshold = LocalDateTime.ofInstant(lastGameImport.toInstant(), ZoneId.systemDefault());
+					LOGGER.info("Updating games for platform " + p.getName() + " after " + updateThreshold.toString());
+				}
+				job.setJobStatus(JobStatus.PROCESSING);
+				job = jobRepository.save(job);
+				int gamesCounter = 0;
+				int offset = 0;
+				int limit = 10;
+				boolean updateThresholdReached = false;
+				boolean endReached = false;
+				while (!updateThresholdReached && !endReached) {
+					GiantBombRequestOptions options = new GiantBombRequestOptions(limit, offset, SORT_BY_UPDATE_DESC,
+							null, FIELDS);
+					LOGGER.info("Getting all games from www.giantbomb.com with {}", options);
+					GiantBombMultiResourceResponse<GiantBombGame> games = gbTemplate.getForGames(options, p	.getGbId()
+																											.toString());
+					for (GiantBombGame game : games.results) {
+						LocalDateTime updated = LocalDateTime.ofInstant(game.date_last_updated.toInstant(),
+								ZoneId.systemDefault());
+						if (updated.isAfter(updateThreshold)) {
+							GameIndex gameIdx = convertToGameIndex(game);
+							LOGGER.info("Adding/Updateing game " + gameIdx.getName());
+							gameIndexRepository.save(gameIdx);
+							gamesCounter++;
+						} else {
+							LOGGER.info("Latest update date reached. All resources up to date.");
+							updateThresholdReached = true;
+							break;
+						}
 					}
+					if ((limit + offset) > games.number_of_total_results) {
+						LOGGER.info("Imported/updated {} games for platform {}", gamesCounter, p);
+						LOGGER.info("reached last page, continue with next platform.");
+						endReached = true;
+					}
+					offset += limit;
 				}
-				if ((limit + offset) > games.number_of_total_results) {
-					LOGGER.info("reached last page, break");
-					break;
-				}
-				offset += limit;
+				p.setLastGamesImport(job.getStarted());
+				platformRepository.save(p);
 			}
-			job.setInfo(
-					"Imported/Updated " + counter + " entries for platform " + p.getName() + "(" + p.getGbId() + ").");
+			job.setInfo("Imported/Updated " + platforms4Import.size() + " platforms ");
 			job.setJobStatus(JobStatus.FINISHED);
 		} catch (Exception e) {
 			job.setJobStatus(JobStatus.STOPPED);
 			job.setInfo(e.getMessage());
+			LOGGER.error("Exception occured...", e);
 		} finally {
 			job.setFinished(new Date());
 			job = jobRepository.save(job);
 			LOGGER.info("********************************");
-			LOGGER.info("FINISHED import of platforms...");
+			LOGGER.info("FINISHED import of games...");
 			LOGGER.info("********************************");
 		}
 	}
 
 	/**
-	 * @param initialImport
-	 * @param p
+	 * @return
 	 */
-	private void handleUpdate(boolean initialImport, GameIndex gidx, Platform p) {
-		if (!initialImport) {
-			GameIndex existing = gameIndexRepository.findByGbId(gidx.getGbId());
-			if (existing != null) {
-				gidx.setGbId(existing.getUid());
-				List<Platform> platforms = existing.getPlatforms();
-				if (!platforms.contains(p)) {
-					platforms.add(p);
+	private List<Platform> findPlatforms4Import() {
+		List<Platform> importGames = platformRepository.findByImportGames(true);
+		if (CollectionUtils.isEmpty(importGames)) {
+			importGames = new ArrayList<>();
+			LOGGER.info("Initial import, no platform marked for import yet, marking initial {}", platforms2Import);
+			for (String gbId : platforms2Import) {
+				Platform p = platformRepository.findByGbId(Long.parseLong(gbId));
+				if (p != null) {
+					LOGGER.info("adding platform {} to  list of platforms4import, and setting import to true...", p);
+					p.setImportGames(true);
+					platformRepository.save(p);
+					importGames.add(p);
+				} else {
+					LOGGER.info("No platform with id {} found, check config...", gbId);
 				}
-				gidx.setPlatforms(platforms);
 			}
 		}
+		return importGames;
 	}
 
 	/**
 	 * @param game
 	 * @return
 	 */
-	private GameIndex convertToGameIndex(GiantBombGame game, Platform p) {
-		GameIndex gidx = new GameIndex();
-
-		gidx.setGbId((long) game.id);
+	private GameIndex convertToGameIndex(GiantBombGame game) {
+		// check if existing
+		GameIndex gidx = gameIndexRepository.findByGbId((long) game.id);
+		if (gidx == null) {
+			gidx = new GameIndex();
+			gidx.setGbId((long) game.id);
+			gidx.setGbAddDate(game.date_added);
+		}
 		gidx.setName(game.name);
 		gidx.setGbDeck(game.deck);
-		gidx.setGbAddDate(game.date_added);
 		gidx.setGbUpdateDate(game.date_last_updated);
-		gidx.setGbSuperUrl(game.image.super_url);
-		gidx.setGbThumbUrl(game.image.thumb_url);
-		gidx.setPlatforms(Arrays.asList(p));
+		if (game.image != null) {
+			gidx.setGbSuperUrl(game.image.super_url);
+			gidx.setGbThumbUrl(game.image.thumb_url);
+		}
+		List<Platform> plats = new ArrayList<>();
+		for (GiantBombPlatform platform : game.platforms) {
+			plats.add(platformRepository.findByGbId((long) platform.id));
+		}
+		gidx.setPlatforms(plats);
 		return gidx;
 	}
 

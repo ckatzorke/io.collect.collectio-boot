@@ -1,9 +1,13 @@
 server:
   port: 8080
   
+logging:
+  file: application.log
+
 # start with -Dgiantbomb.apikey=yourkey
 giantbomb:
   apikey: 
+
 
 #h2
 spring:
@@ -13,5 +17,15 @@ spring:
     username: collectio
     password: collectio
     driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 #spring.boot.admin.url: http://localhost:8081
+
+io:
+  collect:
+    import:
+      platforms: 36,87,139
+      #156,117,138,52,94,22,19,35,146,88,116,143,18,129,32,20,86,145
+      #Wii,Wii Shop, Wii U, new 3ds, 3ds, 3ds eshop, DS, PC, PS, PS2, PS3, PS4, PSN/PS3, PSN/PSP, PSN/PSV, PSP, PSV, XB, XBox360, X Store, SONE  

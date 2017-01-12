@@ -3,12 +3,9 @@ package io.collect.games.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Platform entity, as imported from giantbomb.
@@ -16,23 +13,12 @@ import lombok.Data;
  *
  */
 @Data
+@EqualsAndHashCode(callSuper=true)
 @Entity
-public class Platform {
+public class Platform extends GiantBombEntity{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long uid;
-
-	private String name;
 	private String abbrev;
-
-	private Long gbId;
-	private Date gbAddDate;
-	private Date gbUpdateDate;
-
-	@Lob
-	private String gbDeck;
-	private String gbThumbUrl;
-	private String gbSuperUrl;
-
+	
+	private boolean importGames;
+	private Date lastGamesImport;
 }
