@@ -104,15 +104,15 @@ public class PlatformImportJobProcessor {
 			}
 			job.setInfo("Imported/Updated " + counter + " entries.");
 			job.setJobStatus(JobStatus.FINISHED);
+			LOGGER.info("Imported/Updated " + counter + " entries.");
 		} catch (Exception e) {
+			LOGGER.error("Error importing/updating platforms!", e);
 			job.setJobStatus(JobStatus.STOPPED);
 			job.setInfo(e.getMessage());
 		} finally {
 			job.setFinished(new Date());
 			job = jobRepository.save(job);
-			LOGGER.info("********************************");
 			LOGGER.info("FINISHED import of platforms...");
-			LOGGER.info("********************************");
 		}
 	}
 

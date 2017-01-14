@@ -78,18 +78,17 @@ public class GameIndexImportJobProcessor {
 			for (Platform p : platforms4Import) {
 				importGamesForPlatform(job, p);
 			}
+			LOGGER.info("Imported/Updated " + platforms4Import.size() + " platforms ");
 			job.setInfo("Imported/Updated " + platforms4Import.size() + " platforms ");
 			job.setJobStatus(JobStatus.FINISHED);
 		} catch (Exception e) {
 			job.setJobStatus(JobStatus.STOPPED);
 			job.setInfo(e.getMessage());
-			LOGGER.error("Exception occured...", e);
+			LOGGER.error("Exception occured during importing/updating games!", e);
 		} finally {
 			job.setFinished(new Date());
 			job = jobRepository.save(job);
-			LOGGER.info("********************************");
 			LOGGER.info("FINISHED import of games...");
-			LOGGER.info("********************************");
 		}
 	}
 
