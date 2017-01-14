@@ -22,7 +22,7 @@ import io.collect.games.rest.ResultResponseEntity;
  *
  */
 @RestController
-@RequestMapping("/api/jobs")
+@RequestMapping("/api/games/jobs")
 public class JobHandler {
 
 	private JobRepository jobRepository;
@@ -48,7 +48,7 @@ public class JobHandler {
 			throw exception;
 		}
 		ResultResponseEntity<Job> result = new ResultResponseEntity<>(job);
-		result.add(new Link(request.getRequestURI()));
+		result.add(new Link(request.getRequestURI() + "?" + request.getQueryString()));
 		return result;
 	}
 

@@ -2,7 +2,9 @@ package io.collect.games.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import io.collect.games.model.Platform;
 
@@ -31,8 +33,18 @@ public interface PlatformRepository extends CrudRepository<Platform, Long> {
 	Platform findTopByOrderByUpdateDateDesc();
 
 	/**
-	 * @return all platforms where the flag that games should be added to {@link GameIndexRepository} is set to true
+	 * @return all platforms where the flag that games should be added to
+	 *         {@link GameIndexRepository} is set to true
 	 */
 	List<Platform> findByImportGames(boolean importGames);
+
+	/**
+	 * Like search
+	 * 
+	 * @param query
+	 * @return
+	 */
+	@Query("Select p from Platform p where LOWER(p.name) LIKE %:query%")
+	Iterable<Platform> findByNameContaining(@Param("query") String query);
 
 }

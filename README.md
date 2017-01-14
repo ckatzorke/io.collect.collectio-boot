@@ -51,11 +51,19 @@ Follow the instructions for IDE integration.
 
 ### Jobs api (currenty only Platformimport)
 
-Overview GET /api/jobs
+Overview GET /api/games/jobs
 
-Create new import job POST /api/jobs
+Detail /api/games/jobs/{id}
 
-Detail /api/jobs/{id}
+### Platform api
+
+All platform GET /api/games/platform
+
+Search by name GET /api/games/platform/search?query=xxx
+
+### Games api
+
+Search by name GET /api/games/search?query=xxx
 
 ### Giantbomb API
 
