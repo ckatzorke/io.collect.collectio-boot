@@ -28,7 +28,7 @@ public interface PlatformRepository extends CrudRepository<Platform, Long> {
 	 * 
 	 * @return
 	 */
-	Platform findTopByOrderByGbUpdateDateDesc();
+	Platform findTopByOrderByUpdateDateDesc();
 
 	/**
 	 * @return all platforms where the flag that games should be added to {@link GameIndexRepository} is set to true

@@ -7,7 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Lob;
+import javax.persistence.Table;
 
 import lombok.Data;
 
@@ -17,6 +19,7 @@ import lombok.Data;
  */
 @Data
 @Entity
+@Table(indexes = { @Index(columnList = "gbId"), @Index(columnList = "name") })
 public class GiantBombEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,14 +28,18 @@ public class GiantBombEntity {
 	private String name;
 
 	private Long gbId;
-	private Date gbAddDate;
-	private Date gbUpdateDate;
+	private Date addDate;
+	private Date updateDate;
 
 	@Lob
-	private String gbDeck;
+	private String deck;
 	@Column(length = 512)
-	private String gbThumbUrl;
+	private String thumbUrl;
 	@Column(length = 512)
-	private String gbSuperUrl;
+	private String superUrl;
+	
+	private String siteDetailUrl;
+	private String apiDetailUrl;
+	
 
 }

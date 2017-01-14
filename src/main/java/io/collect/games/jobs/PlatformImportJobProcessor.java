@@ -6,8 +6,6 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import io.collect.games.model.Job;
@@ -32,16 +30,13 @@ public class PlatformImportJobProcessor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PlatformImportJobProcessor.class);
 	private static final GiantBombSort SORT_BY_UPDATE_DESC = new GiantBombSort("date_last_updated", false);
 	private static final String[] FIELDS = new String[] { "name", "deck", "abbreviation", "id", "image", "date_added",
-			"date_last_updated" };
+			"date_last_updated", "site_detail_url", "api_detail_url" };
 
 	private GiantBombTemplate gbTemplate;
 
 	private PlatformRepository platformRepository;
 	private JobRepository jobRepository;
 
-	/**
-	 * 
-	 */
 	public PlatformImportJobProcessor(JobRepository jobRepository, PlatformRepository platformRepository,
 			GiantBombTemplate gbTemplate) {
 		this.jobRepository = jobRepository;
@@ -49,8 +44,9 @@ public class PlatformImportJobProcessor {
 		this.gbTemplate = gbTemplate;
 	}
 
-	@Scheduled(initialDelay = 10000, fixedDelay = 12 * 60 * 60 * 1000)
-	@Async("giantbombExecutor")
+	/**
+	 * Creates and starts the importjob
+	 */
 	public void createJob() {
 		Job job = new Job();
 		job.setJobType(JobType.IMPORT_PLATFORM);
@@ -58,24 +54,21 @@ public class PlatformImportJobProcessor {
 		importPlatforms(job);
 	}
 
-	@Async("giantbombExecutor")
-	public void importPlatforms(Job job) {
+	private void importPlatforms(Job job) {
 		try {
-			LOGGER.info("********************************");
 			LOGGER.info("Starting import of platforms...");
-			LOGGER.info("********************************");
-			Platform latestUpdate = platformRepository.findTopByOrderByGbUpdateDateDesc();
+			Platform latestUpdate = platformRepository.findTopByOrderByUpdateDateDesc();
 			LocalDateTime updateThreshold;
 			boolean initialImport = false;
 			if (latestUpdate == null) {
 				updateThreshold = LocalDateTime.MIN;
 				initialImport = true;
-				LOGGER.info("Initial import...");
+				LOGGER.debug("Initial import...");
 			} else {
-				updateThreshold = LocalDateTime.ofInstant(latestUpdate	.getGbUpdateDate()
+				updateThreshold = LocalDateTime.ofInstant(latestUpdate	.getUpdateDate()
 																		.toInstant(),
 						ZoneId.systemDefault());
-				LOGGER.info("Updating platforms after " + updateThreshold.toString());
+				LOGGER.debug("Updating platforms after " + updateThreshold.toString());
 			}
 			job.setJobStatus(JobStatus.PROCESSING);
 			job = jobRepository.save(job);
@@ -86,7 +79,7 @@ public class PlatformImportJobProcessor {
 			while (!updateThresholdReached) {
 				GiantBombRequestOptions options = new GiantBombRequestOptions(limit, offset, SORT_BY_UPDATE_DESC, null,
 						FIELDS);
-				LOGGER.info("Getting all platforms from www.giantbomb.com with {}", options);
+				LOGGER.debug("Getting all platforms from www.giantbomb.com with {}", options);
 				GiantBombMultiResourceResponse<GiantBombPlatform> platforms = gbTemplate.getForPlatforms(options);
 				for (GiantBombPlatform platform : platforms.results) {
 					LocalDateTime updated = LocalDateTime.ofInstant(platform.date_last_updated.toInstant(),
@@ -94,11 +87,11 @@ public class PlatformImportJobProcessor {
 					if (updated.isAfter(updateThreshold)) {
 						Platform p = convertToPlatform(platform);
 						handleUpdate(initialImport, p);
-						LOGGER.info("Adding platform: " + p);
+						LOGGER.debug("Adding platform: " + p);
 						platformRepository.save(p);
 						counter++;
 					} else {
-						LOGGER.info("Latest update date reached. All resources up to date.");
+						LOGGER.debug("Latest update date reached. All resources up to date.");
 						updateThresholdReached = true;
 						break;
 					}
@@ -144,12 +137,16 @@ public class PlatformImportJobProcessor {
 		Platform p = new Platform();
 		p.setGbId((long) platform.id);
 		p.setName(platform.name);
-		p.setGbDeck(platform.deck);
+		p.setDeck(platform.deck);
 		p.setAbbrev(platform.abbreviation);
-		p.setGbAddDate(platform.date_added);
-		p.setGbUpdateDate(platform.date_last_updated);
-		p.setGbSuperUrl(platform.image.super_url);
-		p.setGbThumbUrl(platform.image.thumb_url);
+		p.setAddDate(platform.date_added);
+		p.setUpdateDate(platform.date_last_updated);
+		if (platform.image != null) {
+			p.setSuperUrl(platform.image.super_url);
+			p.setThumbUrl(platform.image.thumb_url);
+		}
+		p.setApiDetailUrl(platform.api_detail_url);
+		p.setSiteDetailUrl(platform.site_detail_url);
 		return p;
 	}
 
