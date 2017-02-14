@@ -9,18 +9,6 @@ giantbomb:
   apikey: 
 
 
-#h2
-spring:
-  datasource:
-    type: org.apache.tomcat.jdbc.pool.DataSource
-    url: jdbc:h2:~/.collectio/collectiodb;AUTO_SERVER=TRUE
-    username: collectio
-    password: collectio
-    driver-class-name: org.h2.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-
 #spring.boot.admin.url: http://localhost:8081
 
 io:
