@@ -2,6 +2,9 @@ package io.collect.games.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -9,7 +12,12 @@ import lombok.Data;
  *
  */
 @Data
+@JsonIgnoreProperties({ "id", "revision" })
 public class GiantBombEntity {
+	@JsonProperty("_id")
+	private String id;
+	@JsonProperty("_rev")
+	private String revision;
 
 	private String name;
 

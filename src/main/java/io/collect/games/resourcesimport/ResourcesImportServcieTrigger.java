@@ -1,4 +1,4 @@
-package io.collect.games.jobs;
+package io.collect.games.resourcesimport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -10,22 +10,19 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class JobManager {
+public class ResourcesImportServcieTrigger {
 
-	private PlatformImportJobProcessor platformJob;
-	private GameIndexImportJobProcessor gameIndexJob;
+	private final ResourcesImportService resourcesImportService;
 
 	@Autowired
-	public JobManager(PlatformImportJobProcessor platformJob, GameIndexImportJobProcessor gameIndexJob) {
-		this.platformJob = platformJob;
-		this.gameIndexJob = gameIndexJob;
+	public ResourcesImportServcieTrigger(ResourcesImportService resourcesImportService) {
+		this.resourcesImportService = resourcesImportService;
 	}
 
 	@Scheduled(initialDelay = 30000, fixedDelay = 2 * 60 * 60 * 1000)
 	@Async("giantbombExecutor")
-	public void manageJobs() {
-		platformJob.createJob();
-		gameIndexJob.createJob();
+	public void trigger() {
+		this.resourcesImportService.startImport();
 	}
 
 }

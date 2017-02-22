@@ -30,7 +30,7 @@ public class GiantBombPlatform extends GiantBombResource {
 	/**
 	 * Company that created the platform.
 	 */
-	public GiantBombResource company;
+	public GiantBombCompany company;
 	/**
 	 * Main image of the platform.
 	 */

@@ -1,18 +1,13 @@
-package io.collect.games.jobs;
+package io.collect.games.resourcesimport;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import io.collect.games.model.Job;
-import io.collect.games.model.JobStatus;
-import io.collect.games.model.JobType;
 import io.collect.games.model.Platform;
-import io.collect.games.repository.JobRepository;
 import io.collect.games.repository.PlatformRepository;
 import io.collect.games.services.giantbomb.GiantBombRequestOptions;
 import io.collect.games.services.giantbomb.GiantBombSort;
@@ -25,53 +20,41 @@ import io.collect.games.services.giantbomb.resources.GiantBombPlatform;
  *
  */
 @Component
-public class PlatformImportJobProcessor {
+public class PlatformImporter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PlatformImportJobProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PlatformImporter.class);
 	private static final GiantBombSort SORT_BY_UPDATE_DESC = new GiantBombSort("date_last_updated", false);
 	private static final String[] FIELDS = new String[] { "name", "deck", "abbreviation", "id", "image", "date_added",
-			"date_last_updated", "site_detail_url", "api_detail_url" };
+			"date_last_updated", "site_detail_url", "api_detail_url", "company" };
 
 	private GiantBombTemplate gbTemplate;
 
 	private PlatformRepository platformRepository;
-	private JobRepository jobRepository;
 
-	public PlatformImportJobProcessor(JobRepository jobRepository, PlatformRepository platformRepository,
-			GiantBombTemplate gbTemplate) {
-		this.jobRepository = jobRepository;
+	public PlatformImporter(PlatformRepository platformRepository, GiantBombTemplate gbTemplate) {
 		this.platformRepository = platformRepository;
 		this.gbTemplate = gbTemplate;
 	}
 
 	/**
-	 * Creates and starts the importjob
+	 * @param lastImport
+	 *            threshold of last import/update, pass <code>null</code> to not
+	 *            set any threshold, otherwise only Platform resources that have
+	 *            been updated since this passed date/time will be imported
 	 */
-	public void createJob() {
-		Job job = new Job();
-		job.setJobType(JobType.IMPORT_PLATFORM);
-		job = jobRepository.save(job);
-		importPlatforms(job);
-	}
-
-	private void importPlatforms(Job job) {
+	public void importPlatforms(LocalDateTime lastImport) {
 		try {
 			LOGGER.info("Starting import of platforms...");
-			Platform latestUpdate = platformRepository.findTopByOrderByUpdateDateDesc();
 			LocalDateTime updateThreshold;
 			boolean initialImport = false;
-			if (latestUpdate == null) {
+			if (lastImport == null) {
 				updateThreshold = LocalDateTime.MIN;
 				initialImport = true;
 				LOGGER.debug("Initial import...");
 			} else {
-				updateThreshold = LocalDateTime.ofInstant(latestUpdate	.getUpdateDate()
-																		.toInstant(),
-						ZoneId.systemDefault());
+				updateThreshold = lastImport;
 				LOGGER.debug("Updating platforms after " + updateThreshold.toString());
 			}
-			job.setJobStatus(JobStatus.PROCESSING);
-			job = jobRepository.save(job);
 			int counter = 0;
 			int offset = 0;
 			int limit = 10;
@@ -86,9 +69,12 @@ public class PlatformImportJobProcessor {
 							ZoneId.systemDefault());
 					if (updated.isAfter(updateThreshold)) {
 						Platform p = convertToPlatform(platform);
-						handleUpdate(initialImport, p);
 						LOGGER.debug("Adding platform: " + p);
-						platformRepository.save(p);
+						if (p.getId() != null) {
+							platformRepository.update(p);
+						} else {
+							platformRepository.add(p);
+						}
 						counter++;
 					} else {
 						LOGGER.debug("Latest update date reached. All resources up to date.");
@@ -102,30 +88,11 @@ public class PlatformImportJobProcessor {
 				}
 				offset += limit;
 			}
-			job.setInfo("Imported/Updated " + counter + " entries.");
-			job.setJobStatus(JobStatus.FINISHED);
 			LOGGER.info("Imported/Updated " + counter + " entries.");
 		} catch (Exception e) {
-			LOGGER.error("Error importing/updating platforms!", e);
-			job.setJobStatus(JobStatus.STOPPED);
-			job.setInfo(e.getMessage());
+			throw new ImporterException("Error importing/updating platforms!", e);
 		} finally {
-			job.setFinished(new Date());
-			job = jobRepository.save(job);
 			LOGGER.info("FINISHED import of platforms...");
-		}
-	}
-
-	/**
-	 * @param initialImport
-	 * @param p
-	 */
-	private void handleUpdate(boolean initialImport, Platform p) {
-		if (!initialImport) {
-			Platform existing = platformRepository.findByGbId(p.getGbId());
-			if (existing != null) {
-				p.setGbId(existing.getUid());
-			}
 		}
 	}
 
@@ -134,7 +101,8 @@ public class PlatformImportJobProcessor {
 	 * @return
 	 */
 	private Platform convertToPlatform(GiantBombPlatform platform) {
-		Platform p = new Platform();
+		Platform p = platformRepository	.findByAbbrev(platform.abbreviation)
+										.getOrElse(new Platform());
 		p.setGbId((long) platform.id);
 		p.setName(platform.name);
 		p.setDeck(platform.deck);
@@ -147,6 +115,9 @@ public class PlatformImportJobProcessor {
 		}
 		p.setApiDetailUrl(platform.api_detail_url);
 		p.setSiteDetailUrl(platform.site_detail_url);
+		if (platform.company != null) {
+			p.setCompany(platform.company.name);
+		}
 		return p;
 	}
 

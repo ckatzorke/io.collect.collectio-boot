@@ -7,7 +7,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.collect.games.model.Platform;
@@ -31,18 +30,18 @@ public class PlatformHandler {
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	public ResultResponseEntity<Iterable<Platform>> all(HttpServletRequest request) {
-		ResultResponseEntity<Iterable<Platform>> result = new ResultResponseEntity<>(platformRepository.findAll());
+		ResultResponseEntity<Iterable<Platform>> result = new ResultResponseEntity<>(platformRepository.getAll());
 		result.add(new Link(request.getRequestURI()));
 		return result;
 	}
 
-	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
-
-	public ResultResponseEntity<Iterable<Platform>> search(HttpServletRequest request, @RequestParam String query) {
-		ResultResponseEntity<Iterable<Platform>> result = new ResultResponseEntity<>(
-				platformRepository.findByNameContaining(query.toLowerCase()));
-		result.add(new Link(request.getRequestURI() + "?" + request.getQueryString()));
-		return result;
-	}
+//	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+//
+//	public ResultResponseEntity<Iterable<Platform>> search(HttpServletRequest request, @RequestParam String query) {
+//		ResultResponseEntity<Iterable<Platform>> result = new ResultResponseEntity<>(
+//				platformRepository.findByNameContaining(query.toLowerCase()));
+//		result.add(new Link(request.getRequestURI() + "?" + request.getQueryString()));
+//		return result;
+//	}
 
 }

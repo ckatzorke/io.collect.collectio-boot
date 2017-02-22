@@ -2,49 +2,63 @@ package io.collect.games.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.ektorp.CouchDbConnector;
+import org.ektorp.DocumentNotFoundException;
+import org.ektorp.impl.NameConventions;
+import org.ektorp.support.CouchDbRepositorySupport;
+import org.ektorp.support.DesignDocument;
+import org.ektorp.support.GenerateView;
+import org.ektorp.support.StdDesignDocumentFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import io.collect.games.model.Platform;
+import javaslang.control.Option;
 
 /**
  * @author Christian Katzorke ckatzorke@gmail.com
  *
  */
-public interface PlatformRepository extends CrudRepository<Platform, Long> {
+@Component
+public final class PlatformRepository extends CouchDbRepositorySupport<Platform> {
 
 	/**
-	 * Looks up the {@link Platform} entry by GiantbombId (not our uid)
-	 * 
-	 * @param gbId
-	 * @return
+	 * @param type
+	 * @param db
 	 */
-	Platform findByGbId(Long gbId);
+	@Autowired
+	public PlatformRepository(CouchDbConnector db) {
+		super(Platform.class, db);
+		String designDocName = NameConventions.designDocName(Platform.class);
+		StdDesignDocumentFactory ddFactory = new StdDesignDocumentFactory();
+		DesignDocument designDocument = ddFactory.generateFrom(this);
+		designDocument.setId(designDocName);
+		try {
+			DesignDocument existing = ddFactory.getFromDatabase(db, designDocName);
+			designDocument.setRevision(existing.getRevision());
+			db.update(designDocument);
+		} catch (DocumentNotFoundException dnf) {
+			db.create(designDocument);
+		}
+	}
 
-	/**
-	 * Looks up the latest entry of {@link Platform}, ordered by the update date
-	 * from Giantbomb. When importing resources from Giantbomb again, only
-	 * platform resources that were updated later than this date will be
-	 * imported-
-	 * 
-	 * @return
-	 */
-	Platform findTopByOrderByUpdateDateDesc();
+	@GenerateView
+	public Option<Platform> findByAbbrev(String abbrev) {
+		List<Platform> view = queryView("by_abbrev", abbrev);
+		if (!CollectionUtils.isEmpty(view)) {
+			return Option.of(view.get(0));
+		}
+		return Option.of((Platform) null);
+	}
 
-	/**
-	 * @return all platforms where the flag that games should be added to
-	 *         {@link GameIndexRepository} is set to true
-	 */
-	List<Platform> findByImportGames(boolean importGames);
-
-	/**
-	 * Like search
-	 * 
-	 * @param query
-	 * @return
-	 */
-	@Query("Select p from Platform p where LOWER(p.name) LIKE %:query%")
-	Iterable<Platform> findByNameContaining(@Param("query") String query);
+	@GenerateView
+	public Option<Platform> findByName(String name) {
+		List<Platform> view = queryView("by_name", name);
+		if (!CollectionUtils.isEmpty(view)) {
+			return Option.of(view.get(0));
+		}
+		return Option.of((Platform) null);
+	}
 
 }
