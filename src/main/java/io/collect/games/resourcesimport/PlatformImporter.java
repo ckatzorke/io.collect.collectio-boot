@@ -46,10 +46,8 @@ public class PlatformImporter {
 		try {
 			LOGGER.info("Starting import of platforms...");
 			LocalDateTime updateThreshold;
-			boolean initialImport = false;
 			if (lastImport == null) {
 				updateThreshold = LocalDateTime.MIN;
-				initialImport = true;
 				LOGGER.debug("Initial import...");
 			} else {
 				updateThreshold = lastImport;

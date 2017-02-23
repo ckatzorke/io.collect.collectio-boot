@@ -9,6 +9,7 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
 import org.ektorp.support.GenerateView;
 import org.ektorp.support.StdDesignDocumentFactory;
+import org.ektorp.support.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -52,9 +53,9 @@ public final class PlatformRepository extends CouchDbRepositorySupport<Platform>
 		return Option.of((Platform) null);
 	}
 
-	@GenerateView
-	public Option<Platform> findByName(String name) {
-		List<Platform> view = queryView("by_name", name);
+	@View(name = "by_resourceTypeAndGbId", map = "function(doc) { emit('platform-'+doc.gbId, doc._id); }")
+	public Option<Platform> findByGbId(Long gbId) {
+		List<Platform> view = queryView("by_resourceTypeAndGbId", "platform-" + String.valueOf(gbId));
 		if (!CollectionUtils.isEmpty(view)) {
 			return Option.of(view.get(0));
 		}

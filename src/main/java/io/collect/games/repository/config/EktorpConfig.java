@@ -18,14 +18,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class EktorpConfig {
 
+	private StdCouchDbConnector db;
+
 	@Bean()
 	public CouchDbConnector createConnector() throws MalformedURLException {
-		// TODO better httpclient
-		HttpClient httpClient = new StdHttpClient.Builder()	.username("admin").password("admin").url("http://localhost:5984")
+		// TODO better httpclient, parameterized
+		HttpClient httpClient = new StdHttpClient.Builder()	.username("admin")
+															.password("admin")
+															.url("http://localhost:5984")
 															.build();
 
 		CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
-		CouchDbConnector db = new StdCouchDbConnector("collectio", dbInstance);
+		db = new StdCouchDbConnector("collectio", dbInstance);
 		return db;
 	}
+
 }
