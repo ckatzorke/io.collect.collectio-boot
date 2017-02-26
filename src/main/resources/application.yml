@@ -17,3 +17,8 @@ io:
       platforms: 156
       #36,87,139,156,117,138,52,94,22,19,35,146,88,116,143,18,129,32,20,86,145
       #Wii,Wii Shop, Wii U, new 3ds, 3ds, 3ds eshop, DS, PC, PS, PS2, PS3, PS4, PSN/PS3, PSN/PSP, PSN/PSV, PSP, PSV, XB, XBox360, X Store, SONE  
+    couchdb:
+      username: admin
+      password: admin
+      url:  http://localhost:5984
+      

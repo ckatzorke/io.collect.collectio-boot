@@ -7,14 +7,13 @@ import org.ektorp.DocumentNotFoundException;
 import org.ektorp.impl.NameConventions;
 import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.DesignDocument;
-import org.ektorp.support.GenerateView;
 import org.ektorp.support.StdDesignDocumentFactory;
 import org.ektorp.support.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import io.collect.games.model.Platform;
+import io.collect.games.model.GameIndex;
 import javaslang.control.Option;
 
 /**
@@ -22,16 +21,16 @@ import javaslang.control.Option;
  *
  */
 @Component
-public final class PlatformRepository extends CouchDbRepositorySupport<Platform> {
+public final class GameIndexRepository extends CouchDbRepositorySupport<GameIndex> {
 
 	/**
 	 * @param type
 	 * @param db
 	 */
 	@Autowired
-	public PlatformRepository(CouchDbConnector db) {
-		super(Platform.class, db);
-		String designDocName = NameConventions.designDocName(Platform.class);
+	public GameIndexRepository(CouchDbConnector db) {
+		super(GameIndex.class, db);
+		String designDocName = NameConventions.designDocName(GameIndex.class);
 		StdDesignDocumentFactory ddFactory = new StdDesignDocumentFactory();
 		DesignDocument designDocument = ddFactory.generateFrom(this);
 		designDocument.setId(designDocName);
@@ -44,28 +43,13 @@ public final class PlatformRepository extends CouchDbRepositorySupport<Platform>
 		}
 	}
 
-	@GenerateView
-	public Option<Platform> findByAbbrev(String abbrev) {
-		List<Platform> view = queryView("by_abbrev", abbrev);
+	@View(name = "by_resourceTypeAndGbId", map = "function(doc) { if(doc.resource && doc.resource === 'game') { emit(''+doc.gbId, doc._id); } }")
+	public Option<GameIndex> findByGbId(Long gbId) {
+		List<GameIndex> view = queryView("by_resourceTypeAndGbId", "game-" + String.valueOf(gbId));
 		if (!CollectionUtils.isEmpty(view)) {
 			return Option.of(view.get(0));
 		}
-		return Option.of((Platform) null);
-	}
-
-	@View(name = "by_resourceTypeAndGbId", map = "function(doc) {if(doc.resource && doc.resource==='platform'){ emit(''+doc.gbId, doc._id);} }")
-	public Option<Platform> findByGbId(Long gbId) {
-		List<Platform> view = queryView("by_resourceTypeAndGbId", String.valueOf(gbId));
-		if (!CollectionUtils.isEmpty(view)) {
-			return Option.of(view.get(0));
-		}
-		return Option.of((Platform) null);
-	}
-
-	@View(name = "by_importGames", map = "function(doc) { if(doc.importGames){emit(doc._id); } }")
-	public List<Platform> findPlatforms4ImportGames() {
-		List<Platform> view = queryView("by_importGames");
-		return view;
+		return Option.of((GameIndex) null);
 	}
 
 }

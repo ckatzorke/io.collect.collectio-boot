@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class GameIndex extends GiantBombEntity {
 
-	private List<Integer> platformIds;
+	private List<Long> platformIds;
+	private final String resource = "game";
 
 }

@@ -13,18 +13,17 @@ import org.springframework.stereotype.Component;
 public class ResourcesImportService {
 
 	private final PlatformImporter platformImporter;
+	private final GameIndexImporter gamesImporter;
 
-	/**
-	 * 
-	 */
 	@Autowired
-	public ResourcesImportService(PlatformImporter platformImporter) {
+	public ResourcesImportService(PlatformImporter platformImporter, GameIndexImporter gamesImporter) {
 		this.platformImporter = platformImporter;
+		this.gamesImporter = gamesImporter;
 	}
 
 	public void startImport() {
-		importPlatforms();
-		// importGames();
+		this.platformImporter.importPlatforms(null);
+		this.gamesImporter.importGames();
 
 	}
 
@@ -33,7 +32,4 @@ public class ResourcesImportService {
 		return null;
 	}
 
-	private void importPlatforms() {
-		this.platformImporter.importPlatforms(null);
-	}
 }

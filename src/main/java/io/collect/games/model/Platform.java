@@ -2,9 +2,6 @@ package io.collect.games.model;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +13,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@JsonInclude(Include.NON_NULL)
 public class Platform extends GiantBombEntity {
 
 	private String abbrev;
@@ -24,4 +20,6 @@ public class Platform extends GiantBombEntity {
 
 	private boolean importGames;
 	private Date lastGamesImport;
+
+	private final String resource = "platform";
 }

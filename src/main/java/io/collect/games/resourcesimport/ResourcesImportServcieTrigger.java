@@ -19,7 +19,7 @@ public class ResourcesImportServcieTrigger {
 		this.resourcesImportService = resourcesImportService;
 	}
 
-	@Scheduled(initialDelay = 30000, fixedDelay = 2 * 60 * 60 * 1000)
+	@Scheduled(initialDelay = 5000, fixedDelay = 2 * 60 * 60 * 1000)
 	@Async("giantbombExecutor")
 	public void trigger() {
 		this.resourcesImportService.startImport();
