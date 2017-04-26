@@ -1,6 +1,10 @@
 # collectio-boot
 
+![Latest Build Status](https://api.travis-ci.org/ckatzorke/io.collect.collectio-boot.svg?branch=master)
+
 Game collector application
+
+
 
 ## Run
 
